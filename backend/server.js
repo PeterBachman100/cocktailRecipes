@@ -5,6 +5,7 @@ const cors = require('cors');
 const connectDB = require('./config/db.js');
 const authRoutes = require('./routes/authRoutes.js');
 const userRoutes = require('./routes/userRoutes.js');
+const publicRecipeRoutes = require('./routes/publicRecipeRoutes.js');
 
 // Load environment variables
 dotenv.config();
@@ -27,6 +28,7 @@ app.get('/health', (req, res) => {
 // My Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/public-recipes', publicRecipeRoutes);
 
 const PORT = process.env.PORT || 5005;
 

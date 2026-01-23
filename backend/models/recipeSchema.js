@@ -6,7 +6,7 @@ const ENUMS = {
     cocktailType: ['classic', 'modern classic', 'tiki & tropical', 'coffee & dessert', 'shots & shooters', 'punches', 'other'], 
     seasons: ['spring', 'summer', 'fall', 'winter'], 
     flavors: ['bitter', 'sweet', 'savory', 'sour', 'spicy', 'fruity', 'smoky', 'herbaceous'], 
-    units: ['oz', 'ml', 'g', 'dash', 'drop', 'barspoon', 'part', 'count', 'top'] 
+    units: ['oz', 'ml', 'g', 'tsp', 'tbsp', 'dash', 'drop', 'barspoon', 'part', 'count', 'top', 'garnish'] 
 };
 
 const IngredientSchema = new Schema({ 
@@ -26,11 +26,11 @@ const recipe = {
   ingredients: [IngredientSchema],
   steps: [StepSchema],
   notes: { type: String },
-  image: { type: String },
   spirits: [{ type: String, enum: ENUMS.spirits }],
   cocktailType: { type: String, enum: ENUMS.cocktailType },
   flavors: [{ type: String, enum: ENUMS.flavors }],
-  seasons: [{ type: String, enum: ENUMS.seasons }]
+  seasons: [{ type: String, enum: ENUMS.seasons }],
+  image: { type: String },
 };
 
 module.exports = { recipe, ENUMS };
