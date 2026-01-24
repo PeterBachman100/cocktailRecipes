@@ -42,14 +42,29 @@ const createPublicRecipe = async (req, res) => {
 // @desc Get all public recipes (with filtering)
 const getPublicRecipes = async (req, res) => {
     try {
-        const { spirit, flavor, search } = req.query;
+        const { spirits, spiritsMatch, flavors, flavorsMatch, seasons, seasonsMatch, cocktailType, search } = req.query;
         let query = {};
+        if(search) query.$or = [
+            { title: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } },
+            { "ingredients.name": { $regex: search, $options: 'i' } }
+        ];
+        if(cocktailType) query.cocktailType = { $in: cocktailType.split(',')};
 
-        if(spirit) query.spirits = spirit;
-        if(flavor) query.flavor = flavor;
-        if(search) query.title = { $regex: search, $options: 'i' };
+        const applyArrayFilter = (field, value, matchType) => {
+            if (!value) return;
+            const vals = value.split(',');
+            query[field] = (matchType === 'all') ? { $all: vals } : { $in: vals };
+        };
 
-        const recipes = await PublicRecipe.find(query).select('title description spirits cocktailType flavors seasons image').sort('-createdAt');
+        applyArrayFilter('spirits', spirits, spiritsMatch);
+        applyArrayFilter('flavors', flavors, flavorsMatch);
+        applyArrayFilter('seasons', seasons, seasonsMatch);
+
+        const recipes = await PublicRecipe.find(query)
+            .select('title description spirits cocktailType flavors seasons image')
+            .sort('-createdAt');
+
         res.json(recipes);
     } catch(error) {
         res.status(500).json({ message: 'Server Error', error: error.message});
