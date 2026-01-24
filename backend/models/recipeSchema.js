@@ -31,6 +31,7 @@ const recipe = {
   flavors: [{ type: String, enum: ENUMS.flavors }],
   seasons: [{ type: String, enum: ENUMS.seasons }],
   image: { type: String },
+  cloudinaryId: { type: String }
 };
 
 module.exports = { recipe, ENUMS };
