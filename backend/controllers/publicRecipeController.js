@@ -49,7 +49,7 @@ const getPublicRecipes = async (req, res) => {
         if(flavor) query.flavor = flavor;
         if(search) query.title = { $regex: search, $options: 'i' };
 
-        const recipes = await PublicRecipe.find(query).sort('-createdAt');
+        const recipes = await PublicRecipe.find(query).select('title description spirits cocktailType flavors seasons image').sort('-createdAt');
         res.json(recipes);
     } catch(error) {
         res.status(500).json({ message: 'Server Error', error: error.message});
