@@ -84,9 +84,17 @@ const getPublicRecipeById = async (req, res) => {
 
 // @desc Update a recipe (Admin only)
 const updatePublicRecipe = async (req, res) => {
+    let oldCloudinaryId = null;
+    let newCloudinaryId = null;
+
     try {
         let recipe = await PublicRecipe.findById(req.params.id);
-        if (!recipe) return res.status(404).json({ message: 'Recipe not found'});
+        if (!recipe) {
+            if (req.file) await cloudinary.uploader.destroy(req.file.filename);
+            return res.status(404).json({ message: 'Recipe not found'});
+        }
+
+        oldCloudinaryId = recipe.cloudinaryId;
 
         const updateData = { ...req.body };
 
@@ -95,15 +103,23 @@ const updatePublicRecipe = async (req, res) => {
 
         if (req.file) {
             updateData.image = req.file.path;
+            updateData.cloudinaryId = req.file.filename;
+            newCloudinaryId = req.file.filename;
         }
 
-        recipe = await PublicRecipe.findByIdAndUpdate(req.params.id, updateData, {
+        const updatedRecipe = await PublicRecipe.findByIdAndUpdate(req.params.id, updateData, {
             new: true,
             runValidators: true
         });
 
-        res.json(recipe);
+        if (req.file && oldCloudinaryId) {
+            await cloudinary.uploader.destroy(oldCloudinaryId);
+        }
+        res.json(updatedRecipe);
     } catch (error) {
+        if (newCloudinaryId) {
+            await cloudinary.uploader.destroy(newCloudinaryId);
+        }
         res.status(400).json({ message: 'Update failed', error: error.message });
     }
 };
@@ -116,7 +132,17 @@ const deletePublicRecipe = async (req, res) => {
             return res.status(404).json({ message: 'Recipe not found' });
         }
 
+        const cloudinaryId = recipe.cloudinaryId;
         await recipe.deleteOne();
+
+        if (cloudinaryId) {
+            try {
+                await cloudinary.uploader.destroy(cloudinaryId);
+            } catch (error) {
+                console.error('Cloudinary image deletiong failed:', error.message);
+            }
+        }
+
         res.json({ message: 'Recipe removed succesfully' });
     } catch (error) {
         res.status(500).json({ message: 'Server Error',  error: error.message });
