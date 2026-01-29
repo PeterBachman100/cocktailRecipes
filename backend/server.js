@@ -7,30 +7,29 @@ const authRoutes = require('./routes/authRoutes.js');
 const userRoutes = require('./routes/userRoutes.js');
 const publicRecipeRoutes = require('./routes/publicRecipeRoutes.js');
 const privateRecipeRoutes = require('./routes/privateRecipeRoutes.js');
+const folderRoutes = require('./routes/folderRoutes.js');
 
-// Load environment variables
 dotenv.config();
-
-// Connect to Database
 connectDB();
 
 const app = express();
 
-// Middleware
-app.use(express.json()); // Allows us to accept JSON data in the body
-app.use(cors());
-app.use(morgan('dev')); // Logs requests to the console
 
-// Basic Health Route
+app.use(express.json()); 
+app.use(cors());
+app.use(morgan('dev')); 
+
+
 app.get('/health', (req, res) => {
   res.status(200).json({ message: 'Server is running locally!' });
 });
 
-// My Routes
+
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/public-recipes', publicRecipeRoutes);
 app.use('/api/private-recipes', privateRecipeRoutes);
+app.use('/api/folders', folderRoutes);
 
 const PORT = process.env.PORT || 5005;
 

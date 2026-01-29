@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { cloudinary } = require("../config/cloudinary");
 const PrivateRecipe = require("../models/PrivateRecipe");
 const PublicRecipe = require('../models/PublicRecipe');
+const Folder = require('../models/Folder');
 const { applyArrayFilter, parseJsonFields } = require("../utils/queryHelpers");
 
 
@@ -140,13 +141,17 @@ const updatePrivateRecipeById = async (req, res) => {
 const deletePrivateRecipe = async (req, res) => {
     try {
         const recipe = await PrivateRecipe.findOne({ _id: req.params.id, user: req.user.id });
-        if (!recipe) return res.status(404).json({ message: 'Not found' });
+        if (!recipe) return res.status(404).json({ message: 'Recipe not found' });
 
         const cloudId = recipe.cloudinaryId;
         await recipe.deleteOne();
+        await Folder.updateMany(
+            { ownerId: req.user.id },
+            { $pull: { recipeIds: req.params.id } }
+        );
 
         if (cloudId) await cloudinary.uploader.destroy(cloudId);
-        res.json({ message: 'Deleted successfully' });
+        res.json({ message: 'Recipe deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Delete failed', error: error.message });
     }
