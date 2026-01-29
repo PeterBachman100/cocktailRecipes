@@ -1,4 +1,5 @@
 const PublicRecipe = require('../models/PublicRecipe');
+const { applyArrayFilter } = require('../utils/queryHelpers');
 const { cloudinary } = require('../config/cloudinary');
 
 const parseJsonFields = (data, fields) => {
@@ -51,15 +52,9 @@ const getPublicRecipes = async (req, res) => {
         ];
         if(cocktailType) query.cocktailType = { $in: cocktailType.split(',')};
 
-        const applyArrayFilter = (field, value, matchType) => {
-            if (!value) return;
-            const vals = value.split(',');
-            query[field] = (matchType === 'all') ? { $all: vals } : { $in: vals };
-        };
-
-        applyArrayFilter('spirits', spirits, spiritsMatch);
-        applyArrayFilter('flavors', flavors, flavorsMatch);
-        applyArrayFilter('seasons', seasons, seasonsMatch);
+        applyArrayFilter(query, 'spirits', spirits, spiritsMatch);
+        applyArrayFilter(query, 'flavors', flavors, flavorsMatch);
+        applyArrayFilter(query, 'seasons', seasons, seasonsMatch);
 
         const recipes = await PublicRecipe.find(query)
             .select('title description spirits cocktailType flavors seasons image')

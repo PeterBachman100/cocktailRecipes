@@ -6,6 +6,7 @@ const connectDB = require('./config/db.js');
 const authRoutes = require('./routes/authRoutes.js');
 const userRoutes = require('./routes/userRoutes.js');
 const publicRecipeRoutes = require('./routes/publicRecipeRoutes.js');
+const privateRecipeRoutes = require('./routes/privateRecipeRoutes.js');
 
 // Load environment variables
 dotenv.config();
@@ -29,6 +30,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/public-recipes', publicRecipeRoutes);
+app.use('/api/private-recipes', privateRecipeRoutes);
 
 const PORT = process.env.PORT || 5005;
 

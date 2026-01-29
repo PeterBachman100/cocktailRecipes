@@ -7,7 +7,7 @@ const {
     copyPublicRecipe,
     getPrivateRecipes,
     getPrivateRecipeById,
-    updatePrivateRecipe,
+    updatePrivateRecipeById,
     deletePrivateRecipe
 } = require('../controllers/privateRecipeController');
 
@@ -21,7 +21,7 @@ router.post('/copy/:publicId', copyPublicRecipe);
 
 router.route('/:id')
     .get(getPrivateRecipeById)
-    .patch(pload.single('image'), updatePrivateRecipe)
+    .patch(upload.single('image'), updatePrivateRecipeById)
     .delete(deletePrivateRecipe);
 
 module.exports = router;
