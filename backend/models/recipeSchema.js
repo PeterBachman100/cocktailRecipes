@@ -6,7 +6,7 @@ const ENUMS = {
     cocktailType: ['classic', 'modern classic', 'tiki & tropical', 'coffee & dessert', 'shots & shooters', 'punches', 'other'], 
     seasons: ['spring', 'summer', 'fall', 'winter'], 
     flavors: ['bitter', 'sweet', 'savory', 'sour', 'spicy', 'fruity', 'smoky', 'herbaceous'], 
-    units: ['oz', 'ml', 'g', 'tsp', 'tbsp', 'dash', 'drop', 'barspoon', 'part', 'count', 'top', 'garnish'] 
+    units: ['oz', 'ml', 'g', 'tsp', 'tbsp', 'dash', 'drop', 'barspoon', 'part', 'count', 'top'] 
 };
 
 const IngredientSchema = new Schema({ 
