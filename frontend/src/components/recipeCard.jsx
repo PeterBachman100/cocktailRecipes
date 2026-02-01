@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
-import { Leaf, HeartPlus, Folder } from 'lucide-react';
+import { Leaf, HeartPlus } from 'lucide-react';
+import Badge from './Badge';
 
 
 function RecipeCard({ recipeId }) {
@@ -25,22 +26,8 @@ function RecipeCard({ recipeId }) {
 
   if (loading) return <p>Loading</p>;
 
-    const badgeStyle = {
-        textTransform: 'uppercase',
-        fontSize: '0.75rem',
-        backgroundColor: '#fdcc82ff',
-        color: '#373737ff',
-        padding: '0.1rem 0.5rem',
-        borderRadius: '1rem',
-    };
-
-    const flavorStyle = {
-        textTransform: 'capitalize',
-        fontWeight: '500',
-    };
-
-  let renderedSpirits = recipe.spirits.map((spirit) => <span key={spirit} style={badgeStyle}>{ spirit }</span>);
-  let renderedFlavors = recipe.flavors.map((flavor) => <span style={flavorStyle} key={flavor}><Leaf size={12} color='#499144ff' strokeWidth={3} /> {flavor}</span>);
+  let renderedSpirits = recipe.spirits.map((spirit) => <Badge key={spirit} type="spirit">{spirit}</Badge>);
+  let renderedFlavors = recipe.flavors.map((flavor) => <Badge key={flavor} type="flavor">{flavor}</Badge>);
   
   return (
     <div 
@@ -66,7 +53,8 @@ function RecipeCard({ recipeId }) {
                 padding: '0.5rem', 
                 display: 'flex', 
                 flexDirection: 'column', 
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                gap: '0.5rem'
             }}>
                 <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'space-between'}}>
                     <h2 style={{
@@ -82,7 +70,8 @@ function RecipeCard({ recipeId }) {
                     <HeartPlus style={{width: '3rem'}} />
                 </div>
                 <div style={{
-                    display: 'flex', 
+                    display: 'flex',
+                    flexWrap: 'wrap', 
                     gap: '0.5rem'
                 }}>
                     {renderedSpirits}

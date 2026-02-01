@@ -5,7 +5,7 @@ const ENUMS = {
     spirits: ['whiskey', 'bourbon', 'rye', 'scotch', 'rum', 'vodka', 'tequila / mezcal', 'cognac / brandy', 'gin', 'other'], 
     cocktailType: ['classic', 'modern classic', 'tiki & tropical', 'coffee & dessert', 'shots & shooters', 'punches', 'other'], 
     seasons: ['spring', 'summer', 'fall', 'winter'], 
-    flavors: ['bitter', 'sweet', 'savory', 'sour', 'spicy', 'fruity', 'smoky', 'herbaceous'], 
+    flavors: ['bitter', 'sweet', 'savory', 'sour', 'spiced', 'fruity', 'smoky', 'herbaceous'], 
     units: ['oz', 'ml', 'g', 'tsp', 'tbsp', 'dash', 'drop', 'barspoon', 'part', 'count', 'top'] 
 };
 
