@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RecipeBrowser from './pages/RecipeBrowser';
 import RecipeDetails from './pages/RecipeDetails';
+import './app.css';
 
 const EmptyState = () => (
   <div className="empty-msg">Select a drink to see the recipe</div>

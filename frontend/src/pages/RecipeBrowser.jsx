@@ -1,17 +1,13 @@
 import { Outlet } from 'react-router-dom';
 import RecipeList from '../components/recipes/RecipeList';
-import './RecipeBrowser.css';
 
 const RecipeBrowser = () => {
     return (
-        <div className='browser-root'>
-            <aside className='sidebar'>
-                <div className='sidebar-header'>
-                    <h2>Cocktail Library</h2>
-                </div>
+        <div className='RecipeBrowser_root'>
+            <aside className='RecipeBrowser_sidebar'>
                 <RecipeList />
             </aside>
-            <main className='detail-view'>
+            <main className='RecipeBrowser_main'>
                 <Outlet />
             </main>
         </div>

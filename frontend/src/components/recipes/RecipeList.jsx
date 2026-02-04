@@ -26,7 +26,7 @@ function RecipeList() {
   if (loading) return <div>Loading drinks...</div>;
 
   return (
-    <div className="sidebar-scroll-area">
+    <div className="RecipeList_root">
       {recipes.map(recipe => (
         <RecipeCard key={recipe._id} recipe={recipe} />
       ))}
