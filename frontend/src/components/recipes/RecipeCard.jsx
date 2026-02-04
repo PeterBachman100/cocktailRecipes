@@ -1,35 +1,13 @@
-import { useEffect, useState } from 'react';
-import api from '../api/axios';
-import { Leaf, HeartPlus } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 import Badge from './Badge';
 
-
-function RecipeCard({ recipeId }) {
-  const [recipe, setRecipe] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchRecipe = async () => {
-      try {
-        const response = await api.get(`/api/public-recipes/${recipeId}`);
-        setRecipe(response.data);
-        setLoading(false);
-        console.group(response.data);
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-
-    fetchRecipe();
-  }, []);
-
-  if (loading) return <p>Loading</p>;
+function RecipeCard({ recipe }) {
 
   let renderedSpirits = recipe.spirits.map((spirit) => <Badge key={spirit} type="spirit">{spirit}</Badge>);
   let renderedFlavors = recipe.flavors.map((flavor) => <Badge key={flavor} type="flavor">{flavor}</Badge>);
   
   return (
+    <NavLink to={`/recipe/${recipe._id}`} className={({ isActive }) => `recipe-card ${isActive ? 'active' : ''}`}>
     <div 
         style={{
         display: 'flex', 
@@ -56,19 +34,16 @@ function RecipeCard({ recipeId }) {
                 justifyContent: 'space-between',
                 gap: '0.5rem'
             }}>
-                <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'space-between'}}>
-                    <h2 style={{
-                        textTransform: 'uppercase', 
-                        fontSize: '1.5rem', 
-                        fontWeight: '400', 
-                        fontFamily: 'sans-serif',
-                        letterSpacing: '1.5px', 
-                        lineHeight: '90%'
-                    }}>
-                        {recipe.title}
-                    </h2>
-                    <HeartPlus style={{width: '3rem'}} />
-                </div>
+                <h2 style={{
+                    textTransform: 'uppercase', 
+                    fontSize: '1.5rem', 
+                    fontWeight: '400', 
+                    fontFamily: 'sans-serif',
+                    letterSpacing: '1.5px', 
+                    lineHeight: '90%'
+                }}>
+                    {recipe.title}
+                </h2>
                 <div style={{
                     display: 'flex',
                     flexWrap: 'wrap', 
@@ -101,6 +76,7 @@ function RecipeCard({ recipeId }) {
             </div>
         </div>
     </div>
+    </NavLink>
   );
 }
 

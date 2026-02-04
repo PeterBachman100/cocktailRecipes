@@ -1,0 +1,47 @@
+.browser-root {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  border-right: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
+.sidebar-scroll-area {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.detail-view {
+  overflow-y: auto;
+  background: #fdfdfd;
+}
+
+/* The Active Red Highlight */
+.recipe-card.active {
+  background-color: #e11d48; /* Your requested Red */
+  color: white;
+}
+
+.recipe-card.active .tag {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Mobile: Overlay the detail view */
+@media (max-width: 768px) {
+  .browser-root { grid-template-columns: 1fr; }
+  
+  .recipe-page {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: white;
+    overflow-y: auto;
+  }
+}
