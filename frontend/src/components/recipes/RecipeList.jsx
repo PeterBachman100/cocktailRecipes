@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../../api/axios.js';
 import RecipeCard from './RecipeCard.jsx';
 
-function RecipeList() {
+function RecipeList({ viewMode }) {
   
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +26,7 @@ function RecipeList() {
   if (loading) return <div>Loading drinks...</div>;
 
   return (
-    <div className="RecipeList_root">
+    <div className={`RecipeList_root ${viewMode === 'grid' ? 'RecipeList--grid' : 'RecipeList--list'}`}>
       {recipes.map(recipe => (
         <RecipeCard key={recipe._id} recipe={recipe} />
       ))}
