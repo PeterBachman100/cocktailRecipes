@@ -1,86 +1,84 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import api from '../api/axios';
+import { ArrowLeft, } from 'lucide-react';
+import api from '../api/axios.js';
+import BadgeList from '../components/recipes/BadgeList.jsx';
 
-const RecipeDetails = () => {
-    // const { id } = useParams();
-    // const navigate = useNavigate();
-    // const [recipe, setRecipe] = useState(null);
+function RecipeDetails() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [recipe, setRecipe] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    // useEffect(() => {
-    //     const fetchRecipe = async () => {
-    //         try {
-    //             const response = await api.get(`/api/public-recipes/${id}`);
-    //             setRecipe(response.data);
-    //         } catch (error) {
-    //             console.error(error);
-    //         } 
-    //     };
-    //     fetchRecipe();
-    // }, [id]);
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(`/api/public-recipes/${id}`);
+        setRecipe(response.data);
+      } catch (error) {
+        console.error("Error fetching recipe:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRecipe();
+  }, [id]);
 
-    // if (!recipe) return <div>Loading recipe...</div>
+  if (loading) return <div className="RecipeDetails_loading">Loading recipe...</div>;
+  if (!recipe) return <div className="RecipeDetails_error">Recipe not found.</div>;
 
-    // let spiritBadges = recipe.spirits.map((spirit) => <span key={spirit} style={{ color: '#c23131', backgroundColor: '#f5f3f3ff', padding: '0.25rem 0.5rem', fontWeight: '900', textTransform: 'capitalize' }}>{ spirit }</span>);
-    // let flavorBadges = recipe.flavors.map((flavor) => <span style={{backgroundColor: '#f5f3f3ff', color: '#3a3a3aff', padding: '0.125rem 0.25rem', textTransform: 'capitalize'}} key={flavor}>{flavor}</span>);
-    // let renderedCocktailType = <span style={{textTransform: 'capitalize', color: '#5b5b5bff'}}>{recipe.cocktailType}</span>;
-    // let renderedSeasons = recipe.seasons.map((season) => <span key={season} style={{color: '#5b5b5bff', textTransform: 'capitalize'}}>{season}</span>);
+  return (
+    <article className="RecipeDetails_root">
+      <header className="RecipeDetails_nav">
+        <button 
+          className="RecipeDetails_backButton" 
+          onClick={() => navigate('/')}
+        >
+          <ArrowLeft size={20} />
+          <span>Back to Library</span>
+        </button>
+      </header>
 
-    return (
-        <div className='RecipeDetails_root'>
-            {/* <button 
-                onClick={() => navigate('/')} 
-            >
-                <ArrowLeft size={20} /> Back to Library
-            </button>
-            <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
-        
-                <img style={{marginBottom: '0.5rem'}} src={recipe.image} />
-                
-                <div style={{paddingInline: '0.5rem', display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                
-                <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
-                    <div style={{display: 'flex'}}>
-                    <div style={{display: 'flex', gap: '0.25rem', borderRight: '1px solid #a09d9dff', paddingRight: '0.5rem'}}>{spiritBadges}</div>
-                    <div style={{display: 'flex', gap: '0.25rem', paddingLeft: '1rem'}}>{flavorBadges}</div>
-                    </div>
-                    <div style={{display: 'flex'}}>
-                    <div style={{borderRight: '1px solid #a09d9dff', paddingRight: '0.5rem'}}>{renderedCocktailType}</div>
-                    <div style={{display: 'flex', gap: '0.5rem', paddingLeft: '0.5rem'}}>{renderedSeasons}</div>
-                    </div>
-                </div>
+      <main className="RecipeDetails_main">
 
-                <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
-                    <h1 style={{textTransform: 'uppercase'}}>{recipe.title}</h1>
-                    <div>{recipe.description}</div>  
-                </div>
-                
-                <div>
-                    <h2>Ingredients</h2>
-                    <ul style={{marginInlineStart: '0.5rem', listStyleType: 'disc'}}>
-                    {recipe.ingredients.map((ingredient) => (
-                        <li style={{marginInlineStart: '1rem'}} key={ingredient.name}>{ingredient.amount} {ingredient.unit} {ingredient.name}</li>
-                    ))}
-                    </ul>
-                </div>
-                
-                <div>
-                    <h2>Instructions</h2>
-                    <ol style={{marginInlineStart: '0.5rem'}}>
-                    {recipe.steps.map((step, index) => (
-                        <li style={{marginInlineStart: '1rem'}} key={index}>{step.instruction} {step.tip}</li>
-                    ))}
-                    </ol>
-                </div>
-                
-                <div>{recipe.notes}</div>
-
-                </div>
-
-            </div> */}
+        <div className="RecipeDetails_intro">
+            <h1 className="RecipeDetails_title">{recipe.title}</h1>
+            <p className='RecipeDetails_description'>{recipe.description}</p>
+            <div className="RecipeDetails_badges">
+                <BadgeList items={recipe.spirits} type="spirit" />
+                <BadgeList items={recipe.flavors} type="flavor" />
+            </div>
         </div>
-    );
+
+        <div className="RecipeDetails_content">
+            <ul className='RecipeDetails_ingredients'>
+                {recipe.ingredients?.map((ing, index) => (
+                <li key={index} className="RecipeDetails_ingredientItem">
+                    <span className="RecipeDetails_ingredientAmount">{ing.amount}</span>
+                    <span className="RecipeDetails_ingredientUnit">{ing.unit}</span>
+                    <span className="RecipeDetails_ingredientName">{ing.name}</span>
+                </li>
+                ))}
+            </ul>
+            <ol className='RecipeDetails_steps'>
+                {recipe.steps?.map((step, index) => (
+                    <li key={index}>
+                        <span>{step.instruction}</span>
+                        <span>{step?.tip}</span>
+                    </li>
+                ))}
+            </ol>
+            <div className='RecipeDetails_notes'>
+                <p>{recipe.notes}</p>
+            </div>
+        </div>
+
+        <img src={recipe.image} alt={recipe.title} className="RecipeDetails_image" />
+
+      </main>
+    </article>
+  );
 }
 
 export default RecipeDetails;

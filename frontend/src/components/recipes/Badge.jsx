@@ -61,7 +61,7 @@ const Badge = ({ children, type = 'spirit', onClick }) => {
       onClick={onClick}
       type={onClick ? "button" : undefined} 
     >
-      {IconToRender && <IconToRender className="Badge_icon" size={14} color={dynamicVars['--icon-color'] || '#373737ff'} strokeWidth={2.5} />}
+      {IconToRender && <IconToRender className="Badge_icon" size={20} color={dynamicVars['--icon-color'] || '#373737ff'} strokeWidth={2.5} />}
       {label}
     </Component>
   );

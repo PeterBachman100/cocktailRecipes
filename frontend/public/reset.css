@@ -18,7 +18,7 @@ time, mark, audio, video {
 	font: inherit;
 	vertical-align: baseline;
     text-decoration: none;
-    color: initial;
+    color: inherit;
 	box-sizing: border-box;
 }
 /* HTML5 display-role reset for older browsers */
