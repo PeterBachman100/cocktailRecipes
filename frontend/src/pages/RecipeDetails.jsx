@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, } from 'lucide-react';
 import api from '../api/axios.js';
+import Fraction from 'fraction.js';
 import BadgeList from '../components/recipes/BadgeList.jsx';
 
 function RecipeDetails() {
@@ -55,7 +56,7 @@ function RecipeDetails() {
             <ul className='RecipeDetails_ingredients'>
                 {recipe.ingredients?.map((ing, index) => (
                 <li key={index} className="RecipeDetails_ingredientItem">
-                    <span className="RecipeDetails_ingredientAmount">{ing.amount}</span>
+                    <span className="RecipeDetails_ingredientAmount">{new Fraction(ing.amount).simplify(0.01).toFraction(true)}</span>
                     <span className="RecipeDetails_ingredientUnit">{ing.unit}</span>
                     <span className="RecipeDetails_ingredientName">{ing.name}</span>
                 </li>

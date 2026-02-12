@@ -22,6 +22,7 @@
   background: white;
   overflow-y: auto;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 1px 1px black;
 }
 
 .RecipeBrowser--full .RecipeBrowser_main {
@@ -359,4 +360,60 @@
 
 .RecipeDetails_image {
   width: 100%;
+}
+
+
+
+
+
+
+/* Login Styling */
+.Login_root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f8fafc;
+}
+
+.Login_form {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Editor Styling */
+.RecipeEditor_root {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.RecipeEditor_ingRow {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.RecipeEditor_form input, 
+.RecipeEditor_form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+.RecipeEditor_submit {
+  background: #e11d48;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
 }

@@ -13,8 +13,8 @@ const SPIRIT_COLORS = {
   VODKA: { bg: '#e0fcfd98', text: '#495057' },
   'TEQUILA / MEZCAL': { bg: '#e8fc778d', text: '#252525ff' },
   RUM: { bg: '#e9c71b72', text: '#474747ff' },
-  LIQUEUR: { bg: '#000000', text: '#ffffff' },
-  OTHER: { bg: '#d6d6d67b', text: '#373737ff' },
+  LIQUEUR: { bg: '#ccdcfdff', text: '#262626ff' },
+  OTHER: { bg: '#dddddd7b', text: '#373737ff' },
   DEFAULT: { bg: '#a9a9a981', text: '#373737ff' },
 };
 

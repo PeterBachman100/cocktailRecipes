@@ -5,10 +5,11 @@
 const getUserProfile = async (req, res) => {
     if (req.user) {
         res.json({
-            _id: req.user._id,
-            username: req.user.username,
-            role: req.user.role,
-            createdAt: req.user.createAt,
+            user: {
+                _id: req.user._id,
+                username: req.user.username,
+                role: req.user.role,
+            }
         });
     } else {
         res.status(404).json({ message: 'User not found' });
