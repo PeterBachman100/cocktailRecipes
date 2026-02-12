@@ -417,3 +417,72 @@
   cursor: pointer;
   font-weight: bold;
 }
+
+
+
+
+
+.App_wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden; /* Prevents double scrollbars */
+}
+
+.Navbar_root {
+  height: 60px;
+  background: #0f172a; /* Slate 900 */
+  color: white;
+  display: flex;
+  align-items: center;
+  z-index: 200; /* Stays above the mobile overlay */
+}
+
+.Navbar_container {
+  width: 100%;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Navbar_logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: white;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.Navbar_actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.Navbar_link, .Navbar_user {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.Navbar_logoutBtn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.Navbar_logoutBtn:hover {
+  color: #ef4444; /* Red */
+}
+
+/* Adjust the main content to fill remaining space */
+.App_content {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}

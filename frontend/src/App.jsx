@@ -4,6 +4,7 @@ import RecipeDetails from './pages/RecipeDetails';
 import Login from './pages/Login'; 
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import RecipeEditor from './pages/RecipeEditor'; 
+import Navbar from './components/Navbar';
 import './app.css';
 
 const EmptyState = () => (
@@ -13,22 +14,27 @@ const EmptyState = () => (
 function App() {
   return (
     <Router>
-      <Routes>
-        {/* Main Split-view browser */}
-        <Route path="/" element={<RecipeBrowser />}>
-          <Route index element={<EmptyState />} />
-          <Route path="recipe/:id" element={<RecipeDetails />} />
-        </Route>
+      <div className='App_wrapper'>
+        <Navbar />
+        <main className='App_content'>
+          <Routes>
+            {/* Main Split-view browser */}
+            <Route path="/" element={<RecipeBrowser />}>
+              <Route index element={<EmptyState />} />
+              <Route path="recipe/:id" element={<RecipeDetails />} />
+            </Route>
 
-        {/* Auth */}
-        <Route path="/login" element={<Login />} />
+            {/* Auth */}
+            <Route path="/login" element={<Login />} />
 
-        {/* Admin */}
-        <Route element={<ProtectedRoute adminOnly={true} />}>
-          <Route path="/admin/add-recipe" element={<RecipeEditor />} />
-        </Route>
+            {/* Admin */}
+            <Route element={<ProtectedRoute adminOnly={true} />}>
+              <Route path="/admin/add-recipe" element={<RecipeEditor />} />
+            </Route>
 
-      </Routes>
+          </Routes>
+        </main>
+      </div>
     </Router>
   );
 }
