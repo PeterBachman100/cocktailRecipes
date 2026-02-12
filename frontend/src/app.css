@@ -367,7 +367,7 @@
 
 
 
-/* Login Styling */
+/* ---------- Login ---------- */
 .Login_root {
   display: flex;
   justify-content: center;
@@ -385,49 +385,210 @@
   max-width: 400px;
 }
 
-/* Editor Styling */
+
+
+
+
+
+/* ---------- RecipeEditor ---------- */
+
 .RecipeEditor_root {
-  padding: 2rem;
-  max-width: 800px;
-  margin: 0 auto;
+    padding: 2rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
 }
 
-.RecipeEditor_ingRow {
-  display: grid;
-  grid-template-columns: 100px 1fr;
-  gap: 10px;
-  margin-bottom: 8px;
+.RecipeEditor_section {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
 }
 
-.RecipeEditor_form input, 
-.RecipeEditor_form textarea {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
+.RecipeEditor_section h3 {
+    font-size: 1.1rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-.RecipeEditor_submit {
-  background: #e11d48;
-  color: white;
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
+.RecipeEditor_input--title {
+    width: 100%;
+    font-size: 2rem;
+    font-weight: 800;
+    border: none;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 1rem;
+    outline: none;
+}
+
+.RecipeEditor_input--title:focus {
+    border-bottom-color: #3b82f6;
+}
+
+.RecipeEditor_row {
+    display: grid;
+    grid-template-columns: 80px 100px 1fr auto;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: center;
+}
+
+.RecipeEditor_row input, 
+.RecipeEditor_row select {
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: #f8fafc;
+}
+
+.RecipeEditor_tagGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.RecipeEditor_tag {
+    padding: 6px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    background: white;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.RecipeEditor_tag--active {
+    background: #0f172a;
+    color: white;
+    border-color: #0f172a;
+}
+
+.RecipeEditor_uploadArea {
+    border: 2px dashed #cbd5e1;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    border-radius: 12px;
+    color: #64748b;
+    transition: background 0.2s;
+}
+
+.RecipeEditor_uploadArea:hover {
+    background: #f1f5f9;
+}
+
+.RecipeEditor_submitBtn {
+    width: 100%;
+    padding: 1.25rem;
+    background: #10b981; /* Emerald 500 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.RecipeEditor_textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.RecipeEditor_stepBox {
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #e2e8f0;
+}
+
+.RecipeEditor_row--step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.RecipeEditor_stepNumber {
+    background: #0f172a;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    margin-top: 8px;
+}
+
+.RecipeEditor_tipRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding-left: 36px;
+    color: #64748b;
+}
+
+.RecipeEditor_tipRow input {
+    border: none;
+    background: transparent;
+    font-style: italic;
+    font-size: 0.9rem;
+    width: 100%;
+    outline: none;
+}
+
+.RecipeEditor_addBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f1f5f9;
+    border: 1px dashed #cbd5e1;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #475569;
 }
 
 
 
 
+
+
+/* ---------- App Wrapper ---------- */
 
 .App_wrapper {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow: hidden; /* Prevents double scrollbars */
+  overflow: hidden;
 }
+
+.App_content {
+  flex: 1;
+  position: relative;
+  overflow-y: auto;
+}
+
+
+
+
+
+
+/* ---------- Navbar ---------- */
 
 .Navbar_root {
   height: 60px;
@@ -480,9 +641,6 @@
   color: #ef4444; /* Red */
 }
 
-/* Adjust the main content to fill remaining space */
-.App_content {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-}
+
+
+
