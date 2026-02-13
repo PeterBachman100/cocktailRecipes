@@ -13,33 +13,28 @@ const Navbar = () => {
 
     return (
         <nav className='Navbar_root'>
-            <div className='Navbar_container'>
-                <Link to='/' className='Navbar_logo'>
-                    <GlassWater size={24} className='Navbar_icon' />
-                    <span className='Navbar_brand'>Cocktail Recipes</span>
-                </Link>
-
-                <div className='Navbar_actions'>
-                    {user ? (
-                        <>
-                            {isAdmin && (
-                                <Link to='/admin/add-recipe' className='Navbar_link'>
-                                    <Settings size={20} />
-                                    <span className='Navbar_label'>Add Recipe</span>
-                                </Link>
-                            )}
-                            <div className='Navbar_user'>
-                                <User size={20} />
-                                <span>{user.username}</span>
-                            </div>
+            <Link to='/' className='Navbar_link'>
+                <span>Cocktail Library</span>
+            </Link>
+            <div className='Navbar_actions'>
+                {user ? (
+                    <>
+                        {isAdmin && (
+                            <Link to='/admin/add-recipe' className='Navbar_link'>
+                                <span className='Navbar_label'>Add Recipe</span>
+                            </Link>
+                        )}
+                        <div className='Navbar_user'>
+                            <span>{user.username}</span>
                             <button onClick={handleLogout} className='Navbar_logoutBtn'>
-                                <LogOut size={20} />
+                                <LogOut size={16} />
                             </button>
-                        </>
-                    ) : (
-                        <Link to='/login' className='Navbar_loginLink'>Login</Link>
-                    )}
-                </div>
+                        </div>
+                        
+                    </>
+                ) : (
+                    <Link to='/login' className='Navbar_loginLink'>Login</Link>
+                )}
             </div>
         </nav>
     );

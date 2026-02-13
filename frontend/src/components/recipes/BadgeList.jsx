@@ -4,7 +4,7 @@ import Badge from './Badge';
 const BadgeList = ({ items, type }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const limit = type === 'spirit' ? 3 : 3;
+    const limit = type === 'spirit' ? 3 : 4;
     const hasOverflow = items.length > limit;
     const showAll = isExpanded || !hasOverflow;
 

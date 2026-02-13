@@ -64,9 +64,9 @@ function RecipeDetails() {
             </ul>
             <ol className='RecipeDetails_steps'>
                 {recipe.steps?.map((step, index) => (
-                    <li key={index}>
-                        <span>{step.instruction}</span>
-                        <span>{step?.tip}</span>
+                    <li key={index} className='RecipeDetails_step'>
+                      <span>{step.instruction}</span>
+                      {step.tip.length > 0 && <span className='RecipDetails_tip'>{` (${step.tip})`}</span>}
                     </li>
                 ))}
             </ol>
