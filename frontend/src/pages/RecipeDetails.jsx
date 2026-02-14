@@ -4,6 +4,7 @@ import { ArrowLeft, } from 'lucide-react';
 import api from '../api/axios.js';
 import Fraction from 'fraction.js';
 import BadgeList from '../components/recipes/BadgeList.jsx';
+import Ingredient from '../components/recipes/Ingredient.jsx';
 
 function RecipeDetails() {
   const { id } = useParams();
@@ -55,11 +56,10 @@ function RecipeDetails() {
         <div className="RecipeDetails_content">
             <ul className='RecipeDetails_ingredients'>
                 {recipe.ingredients?.map((ing, index) => (
-                <li key={index} className="RecipeDetails_ingredientItem">
-                    <span className="RecipeDetails_ingredientAmount">{new Fraction(ing.amount).simplify(0.01).toFraction(true)}</span>
-                    <span className="RecipeDetails_ingredientUnit">{ing.unit}</span>
-                    <span className="RecipeDetails_ingredientName">{ing.name}</span>
+                <li key={index}>
+                    <Ingredient {...ing} />
                 </li>
+                
                 ))}
             </ul>
             <ol className='RecipeDetails_steps'>

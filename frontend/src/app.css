@@ -371,24 +371,6 @@ input[type=number] {
   gap: 0.5rem;
 }
 
-.RecipeDetails_ingredientItem {
-  display: flex;
-}
-
-.RecipeDetails_ingredientAmount {
-  font-weight: 400;
-  margin-inline-end: 0.25rem;
-}
-
-.RecipeDetails_ingredientUnit {
-  color: gray;
-  margin-inline-end: 0.5rem;
-}
-
-.RecipeDetails_ingredientName {
-  color: black;
-}
-
 .RecipeDetails_steps {
   display: flex;
   flex-direction: column;
@@ -415,6 +397,27 @@ input[type=number] {
 
 .RecipeDetails_image {
   width: 100%;
+}
+
+
+
+
+
+/* ---------- Ingredient ---------- */
+
+.Ingredient_item {
+  display: flex;
+}
+.Ingredient_amount {
+  font-weight: 400;
+  margin-inline-end: 0.25rem;
+}
+.Ingredient_unit {
+  color: gray;
+  margin-inline-end: 0.5rem;
+}
+.Ingredient_name {
+  color: black;
 }
 
 
