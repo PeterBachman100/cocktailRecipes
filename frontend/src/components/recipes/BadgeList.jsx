@@ -1,7 +1,16 @@
 import { useState } from 'react';
 import Badge from './Badge';
 
-const BadgeList = ({ items, type }) => {
+const BadgeList = ({ items, type, compact }) => {
+
+    if (compact === 'false') return (
+        <div className='BadgeList_root'>
+            {items.map((item) => (
+                <Badge key={item} type={type}>{item}</Badge>
+            ))}
+        </div>
+    );
+
     const [isExpanded, setIsExpanded] = useState(false);
 
     const limit = type === 'spirit' ? 3 : 4;

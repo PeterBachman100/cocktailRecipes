@@ -47,8 +47,8 @@ function RecipeDetails() {
             <h1 className="RecipeDetails_title">{recipe.title}</h1>
             <p className='RecipeDetails_description'>{recipe.description}</p>
             <div className="RecipeDetails_badges">
-                <BadgeList items={recipe.spirits} type="spirit" />
-                <BadgeList items={recipe.flavors} type="flavor" />
+                <BadgeList items={recipe.spirits} type="spirit" compact="false" />
+                <BadgeList items={recipe.flavors} type="flavor" compact="false" />
             </div>
         </div>
 
