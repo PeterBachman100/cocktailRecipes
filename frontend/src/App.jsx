@@ -8,7 +8,7 @@ import Navbar from './components/Navbar';
 import './app.css';
 
 const EmptyState = () => (
-  <div className="empty-msg">Select a drink to see the recipe</div>
+  <div></div>
 );
 
 function App() {

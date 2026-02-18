@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, } from 'lucide-react';
+import { ArrowLeft, CircleOff } from 'lucide-react';
+import { MoonLoader } from 'react-spinners';
 import api from '../api/axios.js';
-import Fraction from 'fraction.js';
 import BadgeList from '../components/recipes/BadgeList.jsx';
 import Ingredient from '../components/recipes/Ingredient.jsx';
 
@@ -27,8 +27,46 @@ function RecipeDetails() {
     fetchRecipe();
   }, [id]);
 
-  if (loading) return <div className="RecipeDetails_loading">Loading recipe...</div>;
-  if (!recipe) return <div className="RecipeDetails_error">Recipe not found.</div>;
+  if (loading) return (
+    <div className='RecipeDetails_root'>
+      <header className="RecipeDetails_nav">
+         <button 
+           className="RecipeDetails_backButton" 
+           onClick={() => navigate('/')}
+         >
+           <ArrowLeft size={20} />
+           <span>Back to Library</span>
+         </button>
+       </header>
+      <main className='RecipeDetails_main'>
+        <div className='RecipeDetails_error'>
+          <h2>Loading Recipe...</h2>
+          <MoonLoader loading='true' color='var(--color-accent)' size='100' speedMultiplier='0.5'/>
+        </div>
+      </main>
+    </div>
+  );
+
+  if (!recipe) return (
+    <div className='RecipeDetails_root'>
+      <header className="RecipeDetails_nav">
+         <button 
+           className="RecipeDetails_backButton" 
+           onClick={() => navigate('/')}
+         >
+           <ArrowLeft size={20} />
+           <span>Back to Library</span>
+         </button>
+       </header>
+      <main className='RecipeDetails_main'>
+        <div className='RecipeDetails_error'>
+          <h2>Recipe Not Found</h2>
+          <CircleOff color='var(--color-error)' size={100} />
+        </div>
+      </main>
+    </div>
+  );
+  
 
   return (
     <article className="RecipeDetails_root">
