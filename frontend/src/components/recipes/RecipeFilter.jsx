@@ -1,4 +1,5 @@
 import SegmentedControl from '../utilities/SegmentedControl';
+import { RotateCcw } from 'lucide-react';
 
 const RecipeFilter = ({ filters, updateField, toggleArrayItem, resetFilters }) => {
   
@@ -10,7 +11,7 @@ const RecipeFilter = ({ filters, updateField, toggleArrayItem, resetFilters }) =
     <div className="RecipeFilter_root">
       <div className='RecipeFilter_header'>
         <h2 className='RecipeFilter_heading'>Filter & Search</h2>
-        <button onClick={resetFilters} className='RecipeFilter_buttonReset'>Reset Filters</button>
+        <button onClick={resetFilters} className='RecipeFilter_buttonReset'><RotateCcw size={12} />Reset Filters</button>
       </div>
       {/* Text Search */}
       <section className='RecipeFilter_search'>

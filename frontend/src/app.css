@@ -126,6 +126,7 @@ input[type=number] {
   appearance: textfield;
 }
 
+
 #root {
   height: 100vh;
   overflow: scroll;
@@ -256,7 +257,8 @@ input[type=number] {
   width: 100%;
   height: 100%;
   overflow-y: auto;
-  padding: var(--space-md);
+  position: relative;
+  -webkit-overflow-scrolling: touch;
 }
 
 .RecipeBrowser_main {
@@ -353,6 +355,7 @@ input[type=number] {
 /* ---------- RecipeList ---------- */
 
 .RecipeList_root {
+  padding: var(--space-md);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
   gap: var(--space-md);
@@ -409,7 +412,7 @@ input[type=number] {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   line-clamp: 3;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4;
   overflow: hidden;
 }
 
@@ -480,8 +483,33 @@ input[type=number] {
 
 
 /* ---------- RecipeFilter ---------- */
+.RecipeFilter_container {
+  position: sticky;
+  top: 0;
+  background-color: var(--color-border);
+  box-shadow: var(--shadow-md);
+}
+
+.RecipeFilter.hidden {
+  display: none;
+}
+.RecipeFilter_visibilityToggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border: none;
+  color: var(--color-primary);
+  font-weight: var(--weight-bold);
+  background: none;
+  cursor: pointer;
+}
+.RecipeFilter_visibilityToggle:hover {
+  color: var(--color-accent);
+}
+
 .RecipeFilter_root {
-  padding-bottom: var(--space-lg);
+  padding: var(--space-md);
 }
 .RecipeFilter_header {
   display: flex;
@@ -501,6 +529,9 @@ input[type=number] {
   transition: all 0.2s ease;
   cursor: pointer;
   font-size: var(--text-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
 }
 .RecipeFilter_buttonReset:hover {
   box-shadow: none;
@@ -518,16 +549,18 @@ input[type=number] {
     text-transform: uppercase;
     font-size: var(--text-sm);
   }
+  input {
+    border-color: var(--color-secondary);
+  }
 }
 .RecipeFilter_main {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: start;
-  gap: var(--space-sm);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
 }
 @media (min-width: 900px) {
   .RecipeFilter_main {
-    flex-wrap: nowrap;
+    grid-template-columns: 1.5fr 1fr 1.5fr;
   }
 }
 .RecipeFilter_section {
@@ -550,6 +583,7 @@ input[type=number] {
 .RecipeFilter_sectionList {
   display: flex;
   flex-wrap: wrap;
+  gap: var(--space-xs);
 }
 .RecipeFilter_checkbox {
   font-size: var(--text-xs);
