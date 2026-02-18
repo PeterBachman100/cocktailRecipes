@@ -1,6 +1,6 @@
 const applyArrayFilter = (query, field, value, matchType) => {
     if (!value) return;
-    const vals = value.split(',').map(v => v.trim());
+    const vals = value.split(',').map(v => v.trim().toLowerCase());
     query[field] = (matchType === 'all') ? { $all: vals } : { $in: vals };
 }
 

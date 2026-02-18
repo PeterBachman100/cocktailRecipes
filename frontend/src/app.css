@@ -355,7 +355,7 @@ input[type=number] {
 .RecipeList_root {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: var(--space-sm);
+  gap: var(--space-md);
   transition: all 0.3s ease;
 }
 
@@ -473,6 +473,106 @@ input[type=number] {
 .Badge.Badge_icon {
   flex-shrink: 0;
 }
+
+
+
+
+
+
+/* ---------- RecipeFilter ---------- */
+.RecipeFilter_root {
+  padding-bottom: var(--space-lg);
+}
+.RecipeFilter_header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding-bottom: var(--space-md);
+}
+.RecipeFilter_heading {
+  margin: 0;
+}
+.RecipeFilter_buttonReset {
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-xs);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-size: var(--text-xs);
+}
+.RecipeFilter_buttonReset:hover {
+  box-shadow: none;
+  color: var(--color-primary);
+  background-color: var(--color-accent);
+  font-weight: var(--weight-bold);
+}
+.RecipeFilter_search {
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  label {
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    font-size: var(--text-sm);
+  }
+}
+.RecipeFilter_main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  gap: var(--space-sm);
+}
+@media (min-width: 900px) {
+  .RecipeFilter_main {
+    flex-wrap: nowrap;
+  }
+}
+.RecipeFilter_section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.RecipeFilter_sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+.RecipeFilter_sectionTitle {
+  margin: 0;
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+.RecipeFilter_sectionList {
+  display: flex;
+  flex-wrap: wrap;
+}
+.RecipeFilter_checkbox {
+  font-size: var(--text-xs);
+  padding: var(--space-sm);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  transition: all 0.2s ease;
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  label {
+    cursor: pointer;
+  }
+}
+.RecipeFilter_checkbox:has(input:checked) {
+  background: var(--color-primary);
+  color: var(--color-bg);
+}
+
 
 
 
@@ -689,6 +789,9 @@ input[type=number] {
 }
 
 
+
+
+/* ---------- CheckboxGroup ----------*/
 .CheckboxGroup_checkboxes {
   display: flex;
   flex-wrap: wrap;
@@ -716,6 +819,42 @@ input[type=number] {
   width: 0;
   height: 0;
 }
+
+
+
+
+
+
+/* ---------- Segmented Control ---------- */
+.SegmentedControl_root {
+  display: flex;
+}
+.SegmentedControl_button {
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-xs);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-size: var(--text-xs);
+}
+.SegmentedControl_button:hover {
+  box-shadow: none;
+  color: var(--color-primary);
+  background-color: var(--color-accent);
+  font-weight: var(--weight-bold);
+}
+.SegmentedControl_button--active {
+  box-shadow: none;
+  color: var(--color-primary);
+  background-color: var(--color-accent);
+  font-weight: var(--weight-bold);
+}
+
+
+
+
 
 
 .RecipeEditor_radioGroup {

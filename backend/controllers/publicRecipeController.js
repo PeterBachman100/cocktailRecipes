@@ -50,7 +50,10 @@ const getPublicRecipes = async (req, res) => {
             { description: { $regex: search, $options: 'i' } },
             { "ingredients.name": { $regex: search, $options: 'i' } }
         ];
-        if(cocktailType) query.cocktailType = { $in: cocktailType.split(',')};
+        if(cocktailType) {
+            const types = cocktailType.split(',').map(t => t.trim().toLowerCase());
+            query.cocktailType = { $in: types };
+        }
 
         applyArrayFilter(query, 'spirits', spirits, spiritsMatch);
         applyArrayFilter(query, 'flavors', flavors, flavorsMatch);
