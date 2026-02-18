@@ -13,7 +13,7 @@ const BadgeList = ({ items, type, compact }) => {
 
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const limit = type === 'spirit' ? 3 : 4;
+    const limit = type === 'spirit' ? 3 : 5;
     const hasOverflow = items.length > limit;
     const showAll = isExpanded || !hasOverflow;
 

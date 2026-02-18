@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Trash2, Upload, MessageSquare, Info } from 'lucide-react';
+import { Plus, Trash2, Upload, Info } from 'lucide-react';
+import CheckboxGroup from '../components/utilities/CheckboxGroup';
 
 const ENUMS = { 
     spirits: ['whiskey', 'bourbon', 'rye', 'scotch', 'rum', 'vodka', 'tequila / mezcal', 'cognac', 'brandy', 'gin', 'fortified wine', 'liqueur', 'other'], 
@@ -83,55 +84,42 @@ const RecipeEditor = () => {
           <div className='RecipeEditor_col'>
 
             <header className="RecipeEditor_section">
-              <div>
-                <h3>Title</h3>
-                <input 
-                    value={recipe.title} required
-                    onChange={e => setRecipe({...recipe, title: e.target.value})}
-                    className="RecipeEditor_input--title" placeholder="Cocktail name"
-                />    
-              </div>
-              <div>
-                <h3>Description</h3>
-                <textarea 
-                      className="RecipeEditor_textarea"
-                      placeholder="Cocktail description" required
-                      onChange={e => setRecipe({...recipe, description: e.target.value})}
-                  />         
-              </div>   
+              <h3>Title</h3>
+              <input 
+                  value={recipe.title} required
+                  onChange={e => setRecipe({...recipe, title: e.target.value})}
+                  className="RecipeEditor_input"
+              />    
             </header>
 
             <section className='RecipeEditor_section'>
-              <div>
-                <h3>Spirits</h3>
-                <div className="RecipeEditor_tagGroup">
-                    {ENUMS.spirits.map(s => (
-                        <button 
-                            key={s} type="button"
-                            className={`RecipeEditor_tag ${recipe.spirits.includes(s) ? 'RecipeEditor_tag--active' : ''}`}
-                            onClick={() => toggleTag('spirits', s)}
-                        >
-                            {s}
-                        </button>
-                    ))}
-                </div>
-              </div>
-              <div>
-                <h3>Flavor Profile</h3>
-                <div className="RecipeEditor_tagGroup">
-                    {ENUMS.flavors.map(f => (
-                        <button 
-                            key={f} type="button"
-                            className={`RecipeEditor_tag ${recipe.flavors.includes(f) ? 'RecipeEditor_tag--active' : ''}`}
-                            onClick={() => toggleTag('flavors', f)}
-                        >
-                            {f}
-                        </button>
-                    ))}
-                </div>
-              </div>
-              <div>
-                <h3>Cocktail Type</h3>
+              <h3>Description</h3>
+              <textarea 
+                    className="RecipeEditor_textarea"
+                    required
+                    onChange={e => setRecipe({...recipe, description: e.target.value})}
+                />         
+            </section>
+
+            <section className="RecipeEditor_section">
+                <h3>Image</h3>
+                <label className="RecipeEditor_uploadArea">
+                    <Upload size={16} />
+                    <span>{imageFile ? imageFile.name : "Select Cocktail Photo"}</span>
+                    <input type="file" hidden onChange={e => setImageFile(e.target.files[0])} accept="image/*" />
+                </label>
+            </section>
+
+            <section className='RecipeEditor_section'>
+              <CheckboxGroup label='Spirits' name='spirits' options={ENUMS.spirits} selectedValues={recipe.spirits} onChange={toggleTag} required={true} />
+            </section>
+
+            <section className='RecipeEditor_section'>
+              <CheckboxGroup label="Flavors" name="flavors" options={ENUMS.flavors} selectedValues={recipe.flavors} onChange={toggleTag} required={true} />
+            </section>
+
+            <section className='RecipeEditor_section'>
+              <h3>Cocktail Type</h3>
                 <div className='RecipeEditor_radioGroup'>
                   {ENUMS.cocktailType.map((type) => (
                     <label key={type} className='RecipeEditor_radioLabel'>
@@ -145,17 +133,14 @@ const RecipeEditor = () => {
                     </label>
                   ))}
                 </div>
-
-              </div>
-
             </section>
+
           </div>
 
           {/* --- RIGHT --- */}
           <div className='RecipeEditor_col'>
 
               <section className="RecipeEditor_section">
-                  <div>
                     <h3>Ingredients</h3>
                     <div className='RecipeEditor_ingredients'>
                     {recipe.ingredients.map((ing, idx) => (
@@ -169,7 +154,7 @@ const RecipeEditor = () => {
                                 {ENUMS.units.map(u => <option key={u} value={u}>{u}</option>)}
                             </select>
                             <input 
-                                placeholder="Ingredient name"
+                                placeholder="Ingredient"
                                 onChange={e => handleArrayUpdate('ingredients', idx, 'name', e.target.value)}
                                 required
                             />
@@ -182,18 +167,15 @@ const RecipeEditor = () => {
                         <Plus size={16} /> Add Ingredient
                     </button>
                     </div>
-                  </div>
               </section>
 
               <section className="RecipeEditor_section">
-                <div>
                   <h3>Instructions</h3>
                   <div className='RecipeEditor_instructions'>
                     {recipe.steps.map((step, idx) => (
                         <div key={idx} className="RecipeEditor_instructionRow">
                             <div className="RecipeEditor_instruction">
                                 <textarea 
-                                    placeholder="Instruction (e.g., Shake with ice and strain...)"
                                     onChange={e => handleArrayUpdate('steps', idx, 'instruction', e.target.value)}
                                     required
                                 />
@@ -204,7 +186,7 @@ const RecipeEditor = () => {
                             <div className="RecipeEditor_tip">
                                 <Info size={14} />
                                 <input 
-                                    placeholder="Optional tip (e.g. Shake for at least 30 seconds)"
+                                    placeholder="Optional tip"
                                     onChange={e => handleArrayUpdate('steps', idx, 'tip', e.target.value)}
                                 />
                             </div>
@@ -214,26 +196,15 @@ const RecipeEditor = () => {
                         <Plus size={16} /> Add Step
                     </button>
                   </div>
-                </div>
-                <div>
-                  <h3>Notes</h3>
-                  <textarea 
-                      className="RecipeEditor_textarea"
-                      placeholder="Any additional notes or variations..."
-                      onChange={e => setRecipe({...recipe, notes: e.target.value})}
-                  />
-                </div>
               </section>
 
-              <section className="RecipeEditor_section">
-                  <div>
-                    <h3>Image</h3>
-                    <label className="RecipeEditor_uploadArea">
-                        <Upload size={16} />
-                        <span>{imageFile ? imageFile.name : "Select Cocktail Photo"}</span>
-                        <input type="file" hidden onChange={e => setImageFile(e.target.files[0])} accept="image/*" />
-                    </label>
-                  </div>
+              <section className='RecipeEditor_section'>
+                <h3>Notes</h3>
+                <textarea 
+                    className="RecipeEditor_textarea"
+                    placeholder="Any additional notes or variations..."
+                    onChange={e => setRecipe({...recipe, notes: e.target.value})}
+                />
               </section>
 
               <button type="submit" className="RecipeEditor_submitBtn">Save Recipe</button>

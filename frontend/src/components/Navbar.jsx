@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { GlassWater, LogOut, User, Settings } from 'lucide-react';
+import { Martini, Citrus, Sparkles, LogOut, CirclePlus} from 'lucide-react';
 
 const Navbar = () => {
     const { user, logout, isAdmin } = useAuth();
@@ -13,23 +13,22 @@ const Navbar = () => {
 
     return (
         <nav className='Navbar_root'>
-            <Link to='/' className='Navbar_link'>
-                <span>Cocktail Library</span>
+            <Link to='/' className='Navbar_link Navbar_logo' style={{position: 'relative'}}>
+                <span>Tippl</span>
             </Link>
             <div className='Navbar_actions'>
                 {user ? (
                     <>
                         {isAdmin && (
                             <Link to='/admin/add-recipe' className='Navbar_link'>
-                                <span className='Navbar_label'>Add Recipe</span>
+                                <CirclePlus size={16} />
                             </Link>
                         )}
-                        <div className='Navbar_user'>
-                            <span>{user.username}</span>
-                            <button onClick={handleLogout} className='Navbar_logoutBtn'>
-                                <LogOut size={16} />
-                            </button>
-                        </div>
+                        
+                        <button onClick={handleLogout} className='Navbar_link'>
+                            <LogOut size={16} />
+                        </button>
+                      
                         
                     </>
                 ) : (
