@@ -20,7 +20,7 @@ const Navbar = () => {
                 {user ? (
                     <>
                         {isAdmin && (
-                            <Link to='/admin/add-recipe' className='Navbar_link'>
+                            <Link to='/new' className='Navbar_link'>
                                 <CirclePlus size={16} />
                             </Link>
                         )}

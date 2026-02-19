@@ -15,25 +15,33 @@ function App() {
   return (
     <Router>
       <div className='App_wrapper'>
-        <Navbar />
         <main className='App_content'>
           <Routes>
+
             {/* Main Split-view browser */}
             <Route path="/" element={<RecipeBrowser />}>
               <Route index element={<EmptyState />} />
+              
+              {/* View Recipe */}
               <Route path="recipe/:id" element={<RecipeDetails />} />
+
+              {/* Recipe Editor: ADMIN ONLY */}
+              <Route element={<ProtectedRoute adminOnly={true} />}>
+
+                  {/* New Recipe */}
+                  <Route path="new" element={<RecipeEditor />} />
+                  
+                  {/* Edit Recipe */}
+                  <Route path="recipe/:id/edit" element={<RecipeEditor isEdit={true} />} />
+              </Route>
             </Route>
 
             {/* Auth */}
             <Route path="/login" element={<Login />} />
 
-            {/* Admin */}
-            <Route element={<ProtectedRoute adminOnly={true} />}>
-              <Route path="/admin/add-recipe" element={<RecipeEditor />} />
-            </Route>
-
           </Routes>
         </main>
+        <Navbar />
       </div>
     </Router>
   );

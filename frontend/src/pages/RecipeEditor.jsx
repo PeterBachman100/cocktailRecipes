@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Trash2, Upload, Info } from 'lucide-react';
+import { Plus, Trash2, Upload, Info, ArrowLeft } from 'lucide-react';
 import CheckboxGroup from '../components/utilities/CheckboxGroup';
 
 const ENUMS = { 
@@ -10,6 +10,26 @@ const ENUMS = {
     flavors: ['bitter', 'sweet', 'savory', 'sour', 'spiced', 'fruity', 'smoky', 'herbal'], 
     units: ['oz', 'ml', 'g', 'tsp', 'tbsp', 'dash', 'drop', 'barspoon', 'part', 'count', 'top'] 
 };
+
+const BLANK_RECIPE = {
+  title: '',
+  description: '',
+  notes: '',
+  ingredients: [
+    { name: '', amount: '', unit: 'oz' } 
+  ],
+  steps: [
+    { instruction: '', tip: '' }
+  ],
+  spirits: [],
+  flavors: [],
+  cocktailType: '',
+  image: '',
+  cloudinaryId: ''
+};
+
+const NEW_INGREDIENT = { name: '', amount: '', unit: 'oz' };
+const NEW_STEP = { instruction: '', tip: '' };
 
 const RecipeEditor = () => {
     const navigate = useNavigate();
@@ -77,141 +97,146 @@ const RecipeEditor = () => {
     };
 
     return (
-      <div className="RecipeEditor_root">
-        <form className="RecipeEditor_form" onSubmit={handleSubmit}>
+      <article className="RecipeEditor_root">
+        <header className="RecipeEditor_nav">
+         <button 
+           className="RecipeEditor_backButton" 
+           onClick={() => navigate('/')}
+            >
+            <ArrowLeft size={20} />
+            <span>Back to Library</span>
+            </button>
+        </header>
+        <form onSubmit={handleSubmit}>
+            <main className="RecipeEditor_main">
 
-          {/* --- LEFT --- */}
-          <div className='RecipeEditor_col'>
+                <div className="RecipeEditor_intro">
+                    
+                    <div>
+                        <label className="RecipeEditor_inputLabel" htmlFor="title">Title</label>
+                        <input 
+                            value={recipe.title} required id="title"
+                            onChange={e => setRecipe({...recipe, title: e.target.value})}
+                            className="RecipeEditor_title"
+                        />
+                    </div>
+                    
+                    <div>
+                        <label className="RecipeEditor_inputLabel" htmlFor="description">Description</label>
+                        <textarea 
+                            className="RecipeEditor_description"
+                            required id="description"
+                            onChange={e => setRecipe({...recipe, description: e.target.value})}
+                        /> 
+                    </div>
+                        
+                    
+                    <div className="RecipeEditor_badges">
+                        <div>
+                            <span className="RecipeEditor_inputLabel">Spirits</span>
+                            <CheckboxGroup name='spirits' options={ENUMS.spirits} selectedValues={recipe.spirits} onChange={toggleTag} required={true} />
+                        </div>
+                        <div>
+                            <span className="RecipeEditor_inputLabel">Flavors</span>
+                            <CheckboxGroup name="flavors" options={ENUMS.flavors} selectedValues={recipe.flavors} onChange={toggleTag} required={true} />
+                        </div>
+                    </div>
+                    
+                    <div className='RecipeEditor_selectGroup'>
+                        <label htmlFor="cocktailType" className="RecipeEditor_inputLabel">Cocktail Type</label>
+                        <select 
+                            id="cocktailType"
+                            name="cocktailType" 
+                            value={recipe.cocktailType} 
+                            onChange={(e) => setRecipe({...recipe, cocktailType: e.target.value})}
+                            className='RecipeEditor_select'
+                        >
+                            <option value="" disabled>Select a type...</option>
+                            {ENUMS.cocktailType.map((type) => (
+                            <option key={type} value={type}>
+                                {type.charAt(0).toUpperCase() + type.slice(1)}
+                            </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
 
-            <header className="RecipeEditor_section">
-              <h3>Title</h3>
-              <input 
-                  value={recipe.title} required
-                  onChange={e => setRecipe({...recipe, title: e.target.value})}
-                  className="RecipeEditor_input"
-              />    
-            </header>
+                <div className="RecipeEditor_content">
+                    <div>
+                        <span className="RecipeEditor_inputLabel">Ingredients</span>
+                        <div className='RecipeEditor_ingredients'>
+                            {recipe.ingredients.map((ing, idx) => (
+                            <div key={idx} className="RecipeEditor_ingredientRow">
+                                <input 
+                                    type="number" step="0.25" placeholder="1"
+                                    onChange={e => handleArrayUpdate('ingredients', idx, 'amount', e.target.value)}
+                                    required 
+                                />
+                                <select onChange={e => handleArrayUpdate('ingredients', idx, 'unit', e.target.value)}>
+                                    {ENUMS.units.map(u => <option key={u} value={u}>{u}</option>)}
+                                </select>
+                                <input 
+                                    placeholder="Ingredient"
+                                    onChange={e => handleArrayUpdate('ingredients', idx, 'name', e.target.value)}
+                                    required
+                                />
+                                <button type="button" onClick={() => removeRow('ingredients', idx)} className="RecipeEditor_iconBtn--delete">
+                                    <Trash2 size={16} />
+                                </button>
+                            </div>
+                            ))}
+                            <button type="button" className="RecipeEditor_addBtn" onClick={() => addRow('ingredients', {name:'', amount:'', unit:'oz'})}>
+                                <Plus size={16} /> Add Ingredient
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <span className="RecipeEditor_inputLabel">Instructions</span>
+                        <div className='RecipeEditor_instructions'>
+                            {recipe.steps.map((step, idx) => (
+                            <div key={idx} className="RecipeEditor_instructionRow">
+                                <div className="RecipeEditor_instruction">
+                                    <textarea 
+                                        onChange={e => handleArrayUpdate('steps', idx, 'instruction', e.target.value)}
+                                        required
+                                    />
+                                    <button type="button" onClick={() => removeRow('steps', idx)} className="RecipeEditor_iconBtn--delete">
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
+                                <div className="RecipeEditor_tip">
+                                    <Info size={14} />
+                                    <input 
+                                        placeholder="Optional tip"
+                                        onChange={e => handleArrayUpdate('steps', idx, 'tip', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            ))}
+                            <button type="button" className="RecipeEditor_addBtn" onClick={() => addRow('steps', {instruction:'', tip:''})}>
+                                <Plus size={16} /> Add Step
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label htmlFor="notes" className="RecipeEditor_inputLabel">Notes</label>
+                        <textarea 
+                            className="RecipeEditor_notes" id="notes"
+                            placeholder="Any additional notes or variations..."
+                            onChange={e => setRecipe({...recipe, notes: e.target.value})}
+                        />
+                    </div>
+                </div>
 
-            <section className='RecipeEditor_section'>
-              <h3>Description</h3>
-              <textarea 
-                    className="RecipeEditor_textarea"
-                    required
-                    onChange={e => setRecipe({...recipe, description: e.target.value})}
-                />         
-            </section>
-
-            <section className="RecipeEditor_section">
-                <h3>Image</h3>
                 <label className="RecipeEditor_uploadArea">
                     <Upload size={16} />
                     <span>{imageFile ? imageFile.name : "Select Cocktail Photo"}</span>
                     <input type="file" hidden onChange={e => setImageFile(e.target.files[0])} accept="image/*" />
                 </label>
-            </section>
 
-            <section className='RecipeEditor_section'>
-              <CheckboxGroup label='Spirits' name='spirits' options={ENUMS.spirits} selectedValues={recipe.spirits} onChange={toggleTag} required={true} />
-            </section>
-
-            <section className='RecipeEditor_section'>
-              <CheckboxGroup label="Flavors" name="flavors" options={ENUMS.flavors} selectedValues={recipe.flavors} onChange={toggleTag} required={true} />
-            </section>
-
-            <section className='RecipeEditor_section'>
-              <h3>Cocktail Type</h3>
-                <div className='RecipeEditor_radioGroup'>
-                  {ENUMS.cocktailType.map((type) => (
-                    <label key={type} className='RecipeEditor_radioLabel'>
-                      <input 
-                        type='radio' name='cocktailType' value={type} checked={recipe.cocktailType === type} 
-                        onChange={(e) => setRecipe({...recipe, cocktailType : e.target.value})}
-                        className='RecipeEditor_radioInput'
-                      />
-                      <span className='RecipeEditor_radioCustom'></span>
-                      <span className='RecipeEditor_typeText'>{type}</span>
-                    </label>
-                  ))}
-                </div>
-            </section>
-
-          </div>
-
-          {/* --- RIGHT --- */}
-          <div className='RecipeEditor_col'>
-
-              <section className="RecipeEditor_section">
-                    <h3>Ingredients</h3>
-                    <div className='RecipeEditor_ingredients'>
-                    {recipe.ingredients.map((ing, idx) => (
-                        <div key={idx} className="RecipeEditor_ingredientRow">
-                            <input 
-                                type="number" step="0.25" placeholder="1"
-                                onChange={e => handleArrayUpdate('ingredients', idx, 'amount', e.target.value)}
-                                required 
-                            />
-                            <select onChange={e => handleArrayUpdate('ingredients', idx, 'unit', e.target.value)}>
-                                {ENUMS.units.map(u => <option key={u} value={u}>{u}</option>)}
-                            </select>
-                            <input 
-                                placeholder="Ingredient"
-                                onChange={e => handleArrayUpdate('ingredients', idx, 'name', e.target.value)}
-                                required
-                            />
-                            <button type="button" onClick={() => removeRow('ingredients', idx)} className="RecipeEditor_iconBtn--delete">
-                                <Trash2 size={16} />
-                            </button>
-                        </div>
-                    ))}
-                    <button type="button" className="RecipeEditor_addBtn" onClick={() => addRow('ingredients', {name:'', amount:'', unit:'oz'})}>
-                        <Plus size={16} /> Add Ingredient
-                    </button>
-                    </div>
-              </section>
-
-              <section className="RecipeEditor_section">
-                  <h3>Instructions</h3>
-                  <div className='RecipeEditor_instructions'>
-                    {recipe.steps.map((step, idx) => (
-                        <div key={idx} className="RecipeEditor_instructionRow">
-                            <div className="RecipeEditor_instruction">
-                                <textarea 
-                                    onChange={e => handleArrayUpdate('steps', idx, 'instruction', e.target.value)}
-                                    required
-                                />
-                                <button type="button" onClick={() => removeRow('steps', idx)} className="RecipeEditor_iconBtn--delete">
-                                    <Trash2 size={16} />
-                                </button>
-                            </div>
-                            <div className="RecipeEditor_tip">
-                                <Info size={14} />
-                                <input 
-                                    placeholder="Optional tip"
-                                    onChange={e => handleArrayUpdate('steps', idx, 'tip', e.target.value)}
-                                />
-                            </div>
-                        </div>
-                    ))}
-                    <button type="button" className="RecipeEditor_addBtn" onClick={() => addRow('steps', {instruction:'', tip:''})}>
-                        <Plus size={16} /> Add Step
-                    </button>
-                  </div>
-              </section>
-
-              <section className='RecipeEditor_section'>
-                <h3>Notes</h3>
-                <textarea 
-                    className="RecipeEditor_textarea"
-                    placeholder="Any additional notes or variations..."
-                    onChange={e => setRecipe({...recipe, notes: e.target.value})}
-                />
-              </section>
-
-              <button type="submit" className="RecipeEditor_submitBtn">Save Recipe</button>
-
-            </div>
+            </main>
           </form>
-      </div>
+      </article>
     );
 };
 

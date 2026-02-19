@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet, useParams, useLocation } from 'react-router-dom';
 import RecipeList from '../components/recipes/RecipeList';
 import RecipeFilter from '../components/recipes/RecipeFilter';
 import useRecipeFilters from '../hooks/useRecipeFilters';
@@ -8,7 +8,10 @@ import { SlidersHorizontal, ChevronUp } from 'lucide-react';
 
 const RecipeBrowser = () => {
     const { id } = useParams();
-    const isFullWidth = !id;
+    const { pathname } = useLocation();
+    
+    const isSplitView = id || pathname.includes('/new');
+    const isFullWidth = !isSplitView;
 
     const [filterHidden, setFilterHidden] = useState(false);
 
