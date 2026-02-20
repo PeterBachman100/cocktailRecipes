@@ -1,5 +1,5 @@
 const PublicRecipe = require('../models/PublicRecipe');
-const { applyArrayFilter } = require('../utils/queryHelpers');
+const { applyArrayFilter, SPIRIT_GROUPS } = require('../utils/queryHelpers');
 const { cloudinary } = require('../config/cloudinary');
 
 const parseJsonFields = (data, fields) => {
@@ -44,6 +44,7 @@ const createPublicRecipe = async (req, res) => {
 const getPublicRecipes = async (req, res) => {
     try {
         const { spirits, spiritsMatch, flavors, flavorsMatch, cocktailType, search } = req.query;
+
         let query = {};
         if(search) query.$or = [
             { title: { $regex: search, $options: 'i' } },
@@ -55,11 +56,28 @@ const getPublicRecipes = async (req, res) => {
             query.cocktailType = { $in: types };
         }
 
-        applyArrayFilter(query, 'spirits', spirits, spiritsMatch);
+        let expandedSpirits = spirits;
+        if (spirits && spiritsMatch !== 'all') {
+            const spiritList = spirits.split(',').map(s => s.trim().toLowerCase());
+            const finalSpiritSelection = new Set();
+
+            spiritList.forEach(spirit => {
+                if (SPIRIT_GROUPS[spirit]) {
+                    // If it's a parent (like 'whiskey'), add all its children
+                    SPIRIT_GROUPS[spirit].forEach(child => finalSpiritSelection.add(child));
+                } else {
+                    // If it's a specific spirit (like 'bourbon'), just add it
+                    finalSpiritSelection.add(spirit);
+                }
+            });
+            expandedSpirits = Array.from(finalSpiritSelection).join(',');
+        }
+
+        applyArrayFilter(query, 'spirits', expandedSpirits, spiritsMatch);
         applyArrayFilter(query, 'flavors', flavors, flavorsMatch);
 
         const recipes = await PublicRecipe.find(query)
-            .select('title description spirits cocktailType flavors seasons image')
+            .select('title description spirits cocktailType flavors image')
             .sort('-createdAt');
 
         res.json(recipes);

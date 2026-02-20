@@ -16,4 +16,8 @@ const parseJsonFields = (data, fields) => {
     });
 };
 
-module.exports = { applyArrayFilter, parseJsonFields };
+const SPIRIT_GROUPS = {
+    whiskey: ['whiskey', 'bourbon', 'rye', 'scotch'],
+};
+
+module.exports = { applyArrayFilter, parseJsonFields, SPIRIT_GROUPS };
