@@ -112,6 +112,15 @@ const RecipeEditor = () => {
         }
     };
 
+    const handleDelete = async () => {
+        try {
+            await api.delete(`/api/public-recipes/${id}`);
+            navigate('/', { replace: true });
+        } catch(error) {
+            console.error(error);
+        }
+    }
+
     return (
       <article className="RecipeEditor_root">
         <header className="RecipeEditor_nav">
@@ -258,6 +267,16 @@ const RecipeEditor = () => {
                 </div>
                 
                 <button type='submit' className='RecipeEditor_submitBtn'>Save</button>
+
+                <div className='RecipeEditor_delete'>
+                    <button 
+                        type='button' 
+                        className='RecipeEditor_deleteButton'
+                        onClick={handleDelete}
+                    >
+                        <Trash2 size={12} /><span>Delete recipe</span>
+                    </button>
+                </div>
 
             </main>
           </form>

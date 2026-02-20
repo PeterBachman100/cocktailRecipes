@@ -1005,6 +1005,30 @@ input[type=number] {
   color: var(--color-surface);
 }
 
+.RecipeEditor_delete {
+  width: 100%;  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-md);
+}
+.RecipeEditor_deleteButton {
+  background: none;
+  border: none;
+ 
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  
+  
+}
+.RecipeEditor_deleteButton:hover {
+  color: var(--color-error);
+}
+
 
 
 
