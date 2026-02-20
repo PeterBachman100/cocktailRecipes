@@ -18,7 +18,7 @@ const parseJsonFields = (data, fields) => {
 const createPublicRecipe = async (req, res) => {
     try {
         const recipeData = { ...req.body };
-        const jsonFields = ['ingredients', 'steps', 'spirits', 'flavors', 'seasons'];
+        const jsonFields = ['ingredients', 'steps', 'spirits', 'flavors'];
         parseJsonFields(recipeData, jsonFields);
 
         if (req.file) {

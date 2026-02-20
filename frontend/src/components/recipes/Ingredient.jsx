@@ -1,20 +1,21 @@
 import Fraction from 'fraction.js';
 
 function Ingredient ({ name, amount, unit }) {
-  // 1. Format the Number (using Fraction.js)
+  
   const getDisplayAmount = (amount, unit) => {
-    if (unit === 'top') return '';
+    if (unit === 'top') return (<span className="Ingredient_amount"></span>);
     const displayAmount = new Fraction(amount).simplify(0.01).toFraction(true);
     return (<span className="Ingredient_amount">{displayAmount}</span>);
   }
-  // 2. Handle Plurals
+  
   const getDisplayUnit = (u, qty) => {
     if (u === 'count') return (<span className="Ingredient_unit"></span>);
     if (u === 'top') return (<span className="Ingredient_unit">To top:</span>);
+    if (u === 'garnish') return (<span className='Ingredient_unit'>garnish</span>);
     
     if (qty <= 1) return <span className="Ingredient_unit">{u}</span>;
 
-    // Simple Plural Mapping
+    
     const plurals = {
       'dash': 'dashes',
       'glass': 'glasses',
