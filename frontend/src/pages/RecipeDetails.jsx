@@ -6,6 +6,7 @@ import api from '../api/axios.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import BadgeList from '../components/recipes/BadgeList.jsx';
 import Ingredient from '../components/recipes/Ingredient.jsx';
+import placeholderImage from '../assets/placeholder.png';
 
 function RecipeDetails() {
   const { isAdmin } = useAuth();
@@ -125,7 +126,7 @@ function RecipeDetails() {
             </div>
         </div>
 
-        <img src={recipe.image} alt={recipe.title} className="RecipeDetails_image" />
+        <img src={recipe.image ? recipe.image : placeholderImage} alt={recipe.title} className="RecipeDetails_image" />
 
       </main>
     </article>

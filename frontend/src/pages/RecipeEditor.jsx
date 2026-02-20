@@ -3,6 +3,7 @@ import api from '../api/axios';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Plus, Trash2, Upload, ArrowLeft } from 'lucide-react';
 import CheckboxGroup from '../components/utilities/CheckboxGroup';
+import placeholderImage from '../assets/placeholder.png';
 
 const ENUMS = { 
     spirits: ['whiskey', 'bourbon', 'rye', 'scotch', 'rum', 'vodka', 'tequila / mezcal', 'cognac', 'brandy', 'gin', 'fortified wine', 'liqueur', 'other'], 
@@ -253,7 +254,7 @@ const RecipeEditor = () => {
                         <Upload size={12} />
                         <input type="file" hidden onChange={e => setImageFile(e.target.files[0])} accept="image/*" />
                     </label>
-                    <img src={recipe.image} alt={recipe.title} className="RecipeDetails_image" />
+                    <img src={recipe.image ? recipe.image : placeholderImage} alt={recipe.title} className="RecipeDetails_image" />
                 </div>
                 
                 <button type='submit' className='RecipeEditor_submitBtn'>Save</button>
