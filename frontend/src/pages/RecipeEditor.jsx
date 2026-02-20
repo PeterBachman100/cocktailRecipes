@@ -3,7 +3,6 @@ import api from '../api/axios';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Plus, Trash2, Upload, ArrowLeft } from 'lucide-react';
 import CheckboxGroup from '../components/utilities/CheckboxGroup';
-import placeholderImage from '../assets/placeholder.png';
 
 const ENUMS = { 
     spirits: ['whiskey', 'bourbon', 'rye', 'scotch', 'rum', 'vodka', 'tequila / mezcal', 'cognac', 'brandy', 'gin', 'fortified wine', 'liqueur', 'other'], 
@@ -12,22 +11,18 @@ const ENUMS = {
     units: ['oz', 'ml', 'g', 'tsp', 'tbsp', 'dash', 'drop', 'barspoon', 'part', 'count', 'top', 'garnish'] 
 };
 
-const BLANK_RECIPE = {
+const getInitialState = () => ({
   title: '',
   description: '',
   spirits: [],
   flavors: [],
   cocktailType: 'classic',
-  ingredients: [
-    { name: '', amount: '', unit: 'oz' } 
-  ],
-  steps: [
-    { instruction: '', tip: '' }
-  ],
+  ingredients: [{ name: '', amount: '', unit: 'oz' }],
+  steps: [{ instruction: '', tip: '' }],
   notes: '',
   image: '',
   cloudinaryId: ''
-};
+});
 
 const NEW_INGREDIENT = { name: '', amount: '', unit: 'oz' };
 const NEW_STEP = { instruction: '', tip: '' };
@@ -40,7 +35,7 @@ const RecipeEditor = () => {
     const isEditMode = location.pathname.includes('/edit');
     
     const [imageFile, setImageFile] = useState(null);
-    const [recipe, setRecipe] = useState(BLANK_RECIPE);
+    const [recipe, setRecipe] = useState(getInitialState());
 
     useEffect(() => {
         if (isEditMode && id) {
@@ -194,7 +189,7 @@ const RecipeEditor = () => {
                             {recipe.ingredients.map((ingredient, idx) => (
                             <div key={idx} className="RecipeEditor_ingredientRow">
                                 <input 
-                                    type="number" step="0.25" placeholder="1"
+                                    type="number" placeholder="1"
                                     value={ingredient.amount}
                                     onChange={e => handleArrayUpdate('ingredients', idx, 'amount', e.target.value)}
                                     required 

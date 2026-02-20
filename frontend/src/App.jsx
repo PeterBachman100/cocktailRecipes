@@ -29,10 +29,10 @@ function App() {
               <Route element={<ProtectedRoute adminOnly={true} />}>
 
                   {/* New Recipe */}
-                  <Route path="new" element={<RecipeEditor />} />
+                  <Route path="new" element={<RecipeEditor key='new' />} />
                   
                   {/* Edit Recipe */}
-                  <Route path="recipe/:id/edit" element={<RecipeEditor isEdit={true} />} />
+                  <Route path="recipe/:id/edit" element={<RecipeEditor isEdit={true} key={window.location.pathname} />} />
               </Route>
             </Route>
 
