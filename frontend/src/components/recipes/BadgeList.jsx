@@ -3,9 +3,16 @@ import Badge from './Badge';
 
 const BadgeList = ({ items, type, compact }) => {
 
+    const whiskeyVariations = ['bourbon', 'rye', 'scotch'];
+    const hasSpecificWhiskey = items.some(item => whiskeyVariations.includes(item));
+    const filteredItems = items.filter((item) => {
+        if (hasSpecificWhiskey && item === 'whiskey') return false;
+        return true;
+    });
+
     if (compact === 'false') return (
         <div className='BadgeList_root'>
-            {items.map((item) => (
+            {filteredItems.map((item) => (
                 <Badge key={item} type={type}>{item}</Badge>
             ))}
         </div>
@@ -14,11 +21,11 @@ const BadgeList = ({ items, type, compact }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const limit = type === 'spirit' ? 3 : 5;
-    const hasOverflow = items.length > limit;
+    const hasOverflow = filteredItems.length > limit;
     const showAll = isExpanded || !hasOverflow;
 
-    const displayedItems = showAll ? items : items.slice(0, limit);
-    const overflowCount = items.length - limit;
+    const displayedItems = showAll ? filteredItems : filteredItems.slice(0, limit);
+    const overflowCount = filteredItems.length - limit;
 
     const handleToggle = (e) => {
         e.preventDefault();
