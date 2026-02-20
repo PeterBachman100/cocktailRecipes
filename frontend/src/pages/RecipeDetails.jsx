@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CircleOff } from 'lucide-react';
+import { ArrowLeft, CircleOff, Pencil } from 'lucide-react';
 import { MoonLoader } from 'react-spinners';
 import api from '../api/axios.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import BadgeList from '../components/recipes/BadgeList.jsx';
 import Ingredient from '../components/recipes/Ingredient.jsx';
 
 function RecipeDetails() {
+  const { isAdmin } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
   const [recipe, setRecipe] = useState(null);
@@ -83,7 +85,17 @@ function RecipeDetails() {
       <main className="RecipeDetails_main">
 
         <div className="RecipeDetails_intro">
-            <h1 className="RecipeDetails_title">{recipe.title}</h1>
+            <div className='RecipeDetails_header'>
+              <h1 className="RecipeDetails_title">{recipe.title}</h1>
+              {isAdmin && 
+                <button 
+                  className='RecipeDetails_editButton' 
+                  onClick={() => navigate(`/recipe/${id}/edit`)}
+                >
+                  <Pencil size={16} />
+                </button>
+              }
+            </div>
             <p className='RecipeDetails_description'>{recipe.description}</p>
             <div className="RecipeDetails_badges">
                 <BadgeList items={recipe.spirits} type="spirit" compact="false" />

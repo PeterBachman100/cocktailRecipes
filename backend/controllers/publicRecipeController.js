@@ -43,7 +43,7 @@ const createPublicRecipe = async (req, res) => {
 // @desc Get all public recipes (with filtering)
 const getPublicRecipes = async (req, res) => {
     try {
-        const { spirits, spiritsMatch, flavors, flavorsMatch, seasons, seasonsMatch, cocktailType, search } = req.query;
+        const { spirits, spiritsMatch, flavors, flavorsMatch, cocktailType, search } = req.query;
         let query = {};
         if(search) query.$or = [
             { title: { $regex: search, $options: 'i' } },
@@ -57,7 +57,6 @@ const getPublicRecipes = async (req, res) => {
 
         applyArrayFilter(query, 'spirits', spirits, spiritsMatch);
         applyArrayFilter(query, 'flavors', flavors, flavorsMatch);
-        applyArrayFilter(query, 'seasons', seasons, seasonsMatch);
 
         const recipes = await PublicRecipe.find(query)
             .select('title description spirits cocktailType flavors seasons image')
@@ -96,7 +95,7 @@ const updatePublicRecipe = async (req, res) => {
 
         const updateData = { ...req.body };
 
-        const jsonFields = ['ingredients', 'steps', 'spirits', 'flavors', 'seasons'];
+        const jsonFields = ['ingredients', 'steps', 'spirits', 'flavors'];
         parseJsonFields(updateData, jsonFields);
 
         if (req.file) {

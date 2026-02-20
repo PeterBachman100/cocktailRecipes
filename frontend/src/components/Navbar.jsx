@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Martini, Citrus, Sparkles, LogOut, CirclePlus} from 'lucide-react';
+import { LogOut, CirclePlus} from 'lucide-react';
 
 const Navbar = () => {
     const { user, logout, isAdmin } = useAuth();

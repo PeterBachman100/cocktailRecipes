@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import api from '../api/axios';
-import { useNavigate } from 'react-router-dom';
-import { Plus, Trash2, Upload, Info, ArrowLeft } from 'lucide-react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { Plus, Trash2, Upload, ArrowLeft } from 'lucide-react';
 import CheckboxGroup from '../components/utilities/CheckboxGroup';
 
 const ENUMS = { 
@@ -14,16 +14,16 @@ const ENUMS = {
 const BLANK_RECIPE = {
   title: '',
   description: '',
-  notes: '',
+  spirits: [],
+  flavors: [],
+  cocktailType: 'classic',
   ingredients: [
     { name: '', amount: '', unit: 'oz' } 
   ],
   steps: [
     { instruction: '', tip: '' }
   ],
-  spirits: [],
-  flavors: [],
-  cocktailType: '',
+  notes: '',
   image: '',
   cloudinaryId: ''
 };
@@ -33,17 +33,27 @@ const NEW_STEP = { instruction: '', tip: '' };
 
 const RecipeEditor = () => {
     const navigate = useNavigate();
+    
+    const { id } = useParams();
+    const location = useLocation();
+    const isEditMode = location.pathname.includes('/edit');
+    
     const [imageFile, setImageFile] = useState(null);
-    const [recipe, setRecipe] = useState({
-        title: '',
-        description: '',
-        notes: '',
-        cocktailType: 'classic',
-        ingredients: [{ name: '', amount: '', unit: 'oz' }],
-        steps: [{ instruction: '', tip: '' }],
-        spirits: [],
-        flavors: []
-    });
+    const [recipe, setRecipe] = useState(BLANK_RECIPE);
+
+    useEffect(() => {
+        if (isEditMode && id) {
+            const fetchRecipe = async () => {
+                try {
+                    const response = await api.get(`/api/public-recipes/${id}`);
+                    setRecipe(response.data);
+                } catch (error) {
+                    console.error("Error fetching recipe:", error);
+                }
+            }
+            fetchRecipe();
+        }
+    }, [id, isEditMode]);
 
     // Dynamic list handlers
     const addRow = (field, defaultValue) => {
@@ -88,9 +98,14 @@ const RecipeEditor = () => {
         if (imageFile) formData.append('image', imageFile);
 
         try {
-            const res = await api.post('/api/public-recipes', formData);
-            const newRecipeId = res.data._id;
-            navigate(`/recipe/${newRecipeId}`, { replace: true });
+            let res;
+            if (isEditMode) {
+                res = await api.patch(`/api/public-recipes/${id}`, formData);
+            } else {
+                res = await api.post('/api/public-recipes', formData);
+            }
+            const recipeId = res.data._id;
+            navigate(`/recipe/${recipeId}`, { replace: true });
         } catch (err) {
             console.error(err.response?.data?.error || "Save failed");
         }
@@ -126,6 +141,7 @@ const RecipeEditor = () => {
                         <textarea 
                             className="RecipeEditor_description"
                             required id="description"
+                            value={recipe.description}
                             onChange={e => setRecipe({...recipe, description: e.target.value})}
                         /> 
                     </div>
@@ -165,18 +181,20 @@ const RecipeEditor = () => {
                     <div>
                         <span className="RecipeEditor_inputLabel">Ingredients</span>
                         <div className='RecipeEditor_ingredients'>
-                            {recipe.ingredients.map((ing, idx) => (
+                            {recipe.ingredients.map((ingredient, idx) => (
                             <div key={idx} className="RecipeEditor_ingredientRow">
                                 <input 
                                     type="number" step="0.25" placeholder="1"
+                                    value={ingredient.amount}
                                     onChange={e => handleArrayUpdate('ingredients', idx, 'amount', e.target.value)}
                                     required 
                                 />
-                                <select onChange={e => handleArrayUpdate('ingredients', idx, 'unit', e.target.value)}>
+                                <select value={ingredient.unit} onChange={e => handleArrayUpdate('ingredients', idx, 'unit', e.target.value)}>
                                     {ENUMS.units.map(u => <option key={u} value={u}>{u}</option>)}
                                 </select>
                                 <input 
                                     placeholder="Ingredient"
+                                    value={ingredient.name}
                                     onChange={e => handleArrayUpdate('ingredients', idx, 'name', e.target.value)}
                                     required
                                 />
@@ -196,11 +214,13 @@ const RecipeEditor = () => {
                             {recipe.steps.map((step, idx) => (
                             <div key={idx} className="RecipeEditor_instructionRow">
                                 <textarea 
+                                    value={step.instruction}
                                     className="RecipeEditor_instruction"
                                     onChange={e => handleArrayUpdate('steps', idx, 'instruction', e.target.value)}
                                     required
                                 />
                                 <textarea
+                                    value={step.tip}
                                     className="RecipeEditor_tip"
                                     placeholder="Optional tip"
                                     onChange={e => handleArrayUpdate('steps', idx, 'tip', e.target.value)}
@@ -218,6 +238,7 @@ const RecipeEditor = () => {
                     <div>
                         <label htmlFor="notes" className="RecipeEditor_inputLabel">Notes</label>
                         <textarea 
+                            value={recipe.notes}
                             className="RecipeEditor_notes" id="notes"
                             placeholder="Any additional notes or variations..."
                             onChange={e => setRecipe({...recipe, notes: e.target.value})}
@@ -228,10 +249,11 @@ const RecipeEditor = () => {
                 <div className='RecipeEditor_image'>
                     <span className='RecipeEditor_inputLabel'>Image</span>
                     <label className="RecipeEditor_uploadArea">
-                        <span>{imageFile ? imageFile.name : "Select Cocktail Photo"}</span>
+                        <span>{imageFile ? imageFile.name : (isEditMode ? "Update image" : "Select image")}</span>
                         <Upload size={12} />
                         <input type="file" hidden onChange={e => setImageFile(e.target.files[0])} accept="image/*" />
                     </label>
+                    <img src={recipe.image} alt={recipe.title} className="RecipeDetails_image" />
                 </div>
                 
                 <button type='submit' className='RecipeEditor_submitBtn'>Save</button>

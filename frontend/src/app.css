@@ -665,6 +665,20 @@ input[type=number] {
   align-items: center;
 }
 
+.RecipeDetails_header {
+  display: flex;
+  justify-content: space-between;
+}
+.RecipeDetails_editButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-secondary);
+  transition: all 0.2s ease;
+}
+.RecipeDetails_editButton:hover {
+  color: var(--color-accent);
+}
 .RecipeDetails_intro {
   display: flex;
   flex-direction: column;
@@ -743,8 +757,11 @@ input[type=number] {
 /* ---------- Ingredient ---------- */
 
 .Ingredient_item {
-  display: flex;
   font-size: var(--text-sm);
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2.5rem 4.5rem 1fr 1rem;
+  gap: var(--space-xs);
 }
 .Ingredient_amount {
   font-weight: var(--weight-bold);
