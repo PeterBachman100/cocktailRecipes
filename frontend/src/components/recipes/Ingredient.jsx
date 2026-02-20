@@ -9,10 +9,9 @@ function Ingredient ({ name, amount, unit }) {
   }
   // 2. Handle Plurals
   const getDisplayUnit = (u, qty) => {
-    if (u === 'count') return ''; // Hide the word "count"
+    if (u === 'count') return (<span className="Ingredient_unit"></span>);
     if (u === 'top') return (<span className="Ingredient_unit">To top:</span>);
     
-    // If the amount is 1 or less (like 1/2), keep it singular
     if (qty <= 1) return <span className="Ingredient_unit">{u}</span>;
 
     // Simple Plural Mapping
