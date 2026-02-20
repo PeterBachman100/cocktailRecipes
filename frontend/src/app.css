@@ -839,8 +839,8 @@ input[type=number] {
 
 .RecipeEditor_selectGroup {
   display: flex;
-  align-items: center;
-  gap: var(--space-sm);
+  flex-direction: column;
+  gap: var(--space-xs);
 }
 .RecipeEditor_select {
   width: max-content;
@@ -864,6 +864,11 @@ input[type=number] {
   border-color: var(--color-accent);
 }
 
+.RecipeEditor_content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
 .RecipeEditor_ingredients {
   display: flex;
   flex-direction: column;
@@ -892,13 +897,21 @@ input[type=number] {
 
 .RecipeEditor_addBtn {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: var(--space-xs);
-  background-color: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: var(--space-xs);
-  font-size: var(--text-xs);
+  background: transparent;
+  border: none;
+  font-size: var(--text-xxs);
+  font-weight: var(--weight-med);
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.RecipeEditor_addBtn:hover {
+  color: var(--color-accent);
 }
 .RecipeEditor_iconBtn--delete {
   background-color: transparent;
@@ -917,38 +930,47 @@ input[type=number] {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-xl);
+  gap: var(--space-sm);
 }
 .RecipeEditor_instructionRow {
- width: 100%;
-}
-.RecipeEditor_instruction {
-  display: grid;
-  grid-template-columns: 1fr 2rem;
-  align-items: start;
   width: 100%;
-  gap: var(--space-xs);
-  margin-bottom: var(--space-xs);
-  textarea {
-    resize: vertical;
-  }
-}
-.RecipeEditor_tip {
   display: grid;
-  grid-template-columns: 1rem 1fr 2rem;
+  grid-template-columns: 3fr 1fr 1rem;
   gap: var(--space-xs);
-  align-items: center;
+}
+.RecipeEditor_instruction, .RecipeEditor_tip, .RecipeEditor_notes {
+  field-sizing: content;
+  resize: vertical;
+  color: var(--color-secondary);
+  padding: var(--space-xs);
+  line-height: var(--lh-base);
+  font-family: var(--font-ui);
+  width: 100%;
 }
 
-.RecipeEditor_uploadArea {
+.RecipeEditor_image {
   display: flex;
+  flex-direction: column;
   gap: var(--space-xs);
-  align-items: center;
-  background-color: #fcfcfc;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
-  padding: 0.5rem;
+}
+.RecipeEditor_uploadArea {
   width: max-content;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--color-text-main);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.RecipeEditor_uploadArea:hover {
+  border-color: var(--color-accent);
 }
 .RecipeEditor_submitBtn {
   padding: var(--space-md);

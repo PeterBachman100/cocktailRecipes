@@ -195,22 +195,19 @@ const RecipeEditor = () => {
                         <div className='RecipeEditor_instructions'>
                             {recipe.steps.map((step, idx) => (
                             <div key={idx} className="RecipeEditor_instructionRow">
-                                <div className="RecipeEditor_instruction">
-                                    <textarea 
-                                        onChange={e => handleArrayUpdate('steps', idx, 'instruction', e.target.value)}
-                                        required
-                                    />
-                                    <button type="button" onClick={() => removeRow('steps', idx)} className="RecipeEditor_iconBtn--delete">
-                                        <Trash2 size={16} />
-                                    </button>
-                                </div>
-                                <div className="RecipeEditor_tip">
-                                    <Info size={14} />
-                                    <input 
-                                        placeholder="Optional tip"
-                                        onChange={e => handleArrayUpdate('steps', idx, 'tip', e.target.value)}
-                                    />
-                                </div>
+                                <textarea 
+                                    className="RecipeEditor_instruction"
+                                    onChange={e => handleArrayUpdate('steps', idx, 'instruction', e.target.value)}
+                                    required
+                                />
+                                <textarea
+                                    className="RecipeEditor_tip"
+                                    placeholder="Optional tip"
+                                    onChange={e => handleArrayUpdate('steps', idx, 'tip', e.target.value)}
+                                />
+                                <button type="button" onClick={() => removeRow('steps', idx)} className="RecipeEditor_iconBtn--delete">
+                                    <Trash2 size={12} />
+                                </button>
                             </div>
                             ))}
                             <button type="button" className="RecipeEditor_addBtn" onClick={() => addRow('steps', {instruction:'', tip:''})}>
@@ -228,11 +225,16 @@ const RecipeEditor = () => {
                     </div>
                 </div>
 
-                <label className="RecipeEditor_uploadArea">
-                    <Upload size={16} />
-                    <span>{imageFile ? imageFile.name : "Select Cocktail Photo"}</span>
-                    <input type="file" hidden onChange={e => setImageFile(e.target.files[0])} accept="image/*" />
-                </label>
+                <div className='RecipeEditor_image'>
+                    <span className='RecipeEditor_inputLabel'>Image</span>
+                    <label className="RecipeEditor_uploadArea">
+                        <span>{imageFile ? imageFile.name : "Select Cocktail Photo"}</span>
+                        <Upload size={12} />
+                        <input type="file" hidden onChange={e => setImageFile(e.target.files[0])} accept="image/*" />
+                    </label>
+                </div>
+                
+                <button type='submit' className='RecipeEditor_submitBtn'>Save</button>
 
             </main>
           </form>
