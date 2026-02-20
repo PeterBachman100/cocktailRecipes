@@ -362,6 +362,17 @@ input[type=number] {
   transition: all 0.3s ease;
 }
 
+.RecipeList_loadingWrapper {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+.RecipeList_loading {
+  display: grid;
+  place-items: center;
+}
+
 
 
 

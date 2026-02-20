@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import api from '../../api/axios.js';
 import RecipeCard from './RecipeCard.jsx';
 import useDebounce from '../../hooks/useDebounce';
+import { MoonLoader } from 'react-spinners';
 
-function RecipeList({ viewMode, filters }) {
+function RecipeList({ filters, refreshTrigger }) {
   
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,12 +36,19 @@ function RecipeList({ viewMode, filters }) {
     };
 
     fetchRecipes();
-  }, [debouncedSearch, filters.spirits, filters.spiritsMatch, filters.flavors, filters.flavorsMatch, filters.cocktailType]);
+  }, [debouncedSearch, filters.spirits, filters.spiritsMatch, filters.flavors, filters.flavorsMatch, filters.cocktailType, refreshTrigger]);
 
-  if (loading) return <div>Loading drinks...</div>;
+  if (loading) return (
+    <div className='RecipeList_loadingWrapper'>
+        <div className='RecipeList_loading'>
+          <h2>Loading Recipes...</h2>
+          <MoonLoader loading='true' color='var(--color-accent)' size='100' speedMultiplier='0.5'/>
+        </div>
+    </div>
+  );
 
   return (
-    <div className={`RecipeList_root ${viewMode === 'grid' ? 'RecipeList--grid' : 'RecipeList--list'}`}>
+    <div className={`RecipeList_root`}>
       {recipes.length > 0 ? (
         recipes.map(recipe => (
           <RecipeCard key={recipe._id} recipe={recipe} />

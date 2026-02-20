@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useTransition } from 'react';
 import { Outlet, useParams, useLocation } from 'react-router-dom';
 import RecipeList from '../components/recipes/RecipeList';
 import RecipeFilter from '../components/recipes/RecipeFilter';
@@ -24,6 +24,14 @@ const RecipeBrowser = () => {
         cocktailType: []
     });
 
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
+    const [isPending, startTransition] = useTransition();
+    const triggerRefresh = useCallback(() => {
+        startTransition(() => {
+            setRefreshTrigger(prev => prev + 1);
+        });
+    }, []);
+
     return (
         <div className={`RecipeBrowser_root ${isFullWidth ? 'RecipeBrowser--full' : 'RecipeBrowser--split'}`}>
             <aside className='RecipeBrowser_sidebar'>
@@ -47,10 +55,10 @@ const RecipeBrowser = () => {
                         
                     </button>
                 </div>
-                <RecipeList viewMode={isFullWidth ? 'grid' : 'list'} filters={filters} />
+                <RecipeList filters={filters} refreshTrigger={refreshTrigger} isRefreshing={isPending} />
             </aside>
             <main className='RecipeBrowser_main'>
-                <Outlet />
+                <Outlet context={{ triggerRefresh }} />
             </main>
         </div>
     );

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams, useLocation, useOutletContext } from 'react-router-dom';
 import { Plus, Trash2, Upload, ArrowLeft } from 'lucide-react';
 import CheckboxGroup from '../components/utilities/CheckboxGroup';
 
@@ -29,7 +29,7 @@ const NEW_STEP = { instruction: '', tip: '' };
 
 const RecipeEditor = () => {
     const navigate = useNavigate();
-    
+    const { triggerRefresh } = useOutletContext() || {};
     const { id } = useParams();
     const location = useLocation();
     const isEditMode = location.pathname.includes('/edit');
@@ -101,6 +101,7 @@ const RecipeEditor = () => {
                 res = await api.post('/api/public-recipes', formData);
             }
             const recipeId = res.data._id;
+            triggerRefresh();
             navigate(`/recipe/${recipeId}`, { replace: true });
         } catch (err) {
             console.error(err.response?.data?.error || "Save failed");
@@ -110,6 +111,7 @@ const RecipeEditor = () => {
     const handleDelete = async () => {
         try {
             await api.delete(`/api/public-recipes/${id}`);
+            triggerRefresh();
             navigate('/', { replace: true });
         } catch(error) {
             console.error(error);
@@ -258,7 +260,7 @@ const RecipeEditor = () => {
                         <Upload size={12} />
                         <input type="file" hidden onChange={e => setImageFile(e.target.files[0])} accept="image/*" />
                     </label>
-                    <img src={recipe.image} alt={recipe.title} className="RecipeDetails_image" />
+                    <img src={recipe.image || null} alt={recipe.title} className="RecipeDetails_image" />
                 </div>
                 
                 <button type='submit' className='RecipeEditor_submitBtn'>Save</button>
