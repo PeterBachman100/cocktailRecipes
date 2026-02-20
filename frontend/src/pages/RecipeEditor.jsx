@@ -16,7 +16,7 @@ const getInitialState = () => ({
   description: '',
   spirits: [],
   flavors: [],
-  cocktailType: 'classic',
+  cocktailType: '',
   ingredients: [{ name: '', amount: '', unit: 'oz' }],
   steps: [{ instruction: '', tip: '' }],
   notes: '',
