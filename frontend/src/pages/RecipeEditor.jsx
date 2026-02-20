@@ -181,7 +181,7 @@ const RecipeEditor = () => {
                                     required
                                 />
                                 <button type="button" onClick={() => removeRow('ingredients', idx)} className="RecipeEditor_iconBtn--delete">
-                                    <Trash2 size={16} />
+                                    <Trash2 size={12} />
                                 </button>
                             </div>
                             ))}
