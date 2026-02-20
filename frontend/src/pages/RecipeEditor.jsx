@@ -263,7 +263,7 @@ const RecipeEditor = () => {
                         <Upload size={12} />
                         <input type="file" hidden onChange={e => setImageFile(e.target.files[0])} accept="image/*" />
                     </label>
-                    <img src={recipe.image ? recipe.image : placeholderImage} alt={recipe.title} className="RecipeDetails_image" />
+                    <img src={recipe.image} alt={recipe.title} className="RecipeDetails_image" />
                 </div>
                 
                 <button type='submit' className='RecipeEditor_submitBtn'>Save</button>

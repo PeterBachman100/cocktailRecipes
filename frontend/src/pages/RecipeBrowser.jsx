@@ -13,7 +13,7 @@ const RecipeBrowser = () => {
     const isSplitView = id || pathname.includes('/new');
     const isFullWidth = !isSplitView;
 
-    const [filterHidden, setFilterHidden] = useState(false);
+    const [filterHidden, setFilterHidden] = useState(true);
 
     const { filters, updateField, toggleArrayItem, resetFilters } = useRecipeFilters({
         search: '',
