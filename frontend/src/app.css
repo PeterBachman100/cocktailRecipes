@@ -57,6 +57,19 @@
   --shadow-md: 0 4px 6px -1px rgba(var(--color-shadow-tint), 0.1), 
                0 2px 4px -2px rgba(var(--color-shadow-tint), 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(var(--color-shadow-tint), 0.15);
+
+  /* */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.1)
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 body {
@@ -304,7 +317,7 @@ input[type=number] {
   }
 
   .RecipeBrowser--split .RecipeBrowser_sidebar {
-    flex-basis: 300px;
+    flex-basis: 330px;
   }
 
   .RecipeBrowser--full .RecipeBrowser_main {
@@ -313,39 +326,39 @@ input[type=number] {
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1000px) {
   .RecipeBrowser--split .RecipeBrowser_sidebar {
     flex-basis: 600px;
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1300px) {
   .RecipeBrowser--split .RecipeBrowser_sidebar {
     flex-basis: 900px;
   }
 }
 
-@media (min-width: 1500px) {
-  .RecipeBrowser--split .RecipeBrowser_sidebar {
-    flex-basis: 900px;
-  }
-}
-
-@media (min-width: 1800px) {
+@media (min-width: 1600px) {
   .RecipeBrowser--split .RecipeBrowser_sidebar {
     flex-basis: 1200px;
   }
 }
 
-@media (min-width: 2100px) {
+@media (min-width: 1900px) {
   .RecipeBrowser--split .RecipeBrowser_sidebar {
     flex-basis: 1500px;
   }
 }
 
-@media (min-width: 2400px) {
+@media (min-width: 2200px) {
   .RecipeBrowser--split .RecipeBrowser_sidebar {
     flex-basis: 1800px;
+  }
+}
+
+@media (min-width: 2500px) {
+  .RecipeBrowser--split .RecipeBrowser_sidebar {
+    flex-basis: 2100px;
   }
 }
 
@@ -411,14 +424,14 @@ input[type=number] {
 
 .RecipeCard_title {
   text-transform: capitalize;
-  font-size: var(--text-base);
+  font-size: var(--text-md);
   color: var(--color-secondary);
   margin: 0;
 }
 
 .RecipeCard_description {
   font-weight: 200;
-  font-size: var(--text-xs);
+  font-size: var(--text-sm);
   color: var(--color-text-muted);
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -451,7 +464,7 @@ input[type=number] {
 /* ---------- Badge ---------- */
 
 .Badge {
-  font-size: var(--text-xs);
+  font-size: var(--text-sm);
   text-transform: capitalize;
   border-radius: var(--radius-pill);
   transition: all 0.2s ease;
@@ -773,10 +786,9 @@ input[type=number] {
   grid-template-columns: 2.5rem 4.5rem 1fr 1rem;
   gap: var(--space-xs);
   padding-block: var(--space-xs);
-}
-.Ingredient_item {
   border-bottom: 1px solid var(--color-border);
 }
+
 .Ingredient_amount {
   font-weight: var(--weight-bold);
   margin-inline-end: var(--space-xs);
@@ -847,12 +859,19 @@ input[type=number] {
 }
 
 .RecipeEditor_title {
+
+}
+.RecipeEditor_title_input {
   font-size: var(--text-lg);
   font-weight: var(--weight-bold);
   font-family: var(--font-display);
   width: 100%;
 }
+
 .RecipeEditor_description {
+
+}
+.RecipeEditor_description_input {
   field-sizing: content;
   resize: vertical;
   width: 100%;
@@ -911,7 +930,10 @@ input[type=number] {
   display: grid;
   grid-template-columns: 2.5rem 4.5rem 1fr 1rem;
   gap: var(--space-xs);
-
+  animation-name: fadeIn;
+  animation-duration: 0.5s; 
+  animation-fill-mode: backwards;
+  
   input[type="number"] {
     font-weight: var(--weight-bold);
   }
@@ -968,6 +990,9 @@ input[type=number] {
   display: grid;
   grid-template-columns: 3fr 1fr 1rem;
   gap: var(--space-xs);
+  animation-name: fadeIn;
+  animation-duration: 0.5s; 
+  animation-fill-mode: backwards;
 }
 .RecipeEditor_instruction, .RecipeEditor_tip, .RecipeEditor_notes {
   field-sizing: content;
@@ -1041,6 +1066,40 @@ input[type=number] {
 }
 .RecipeEditor_deleteButton:hover {
   color: var(--color-error);
+}
+
+.Error_wrapper {
+  input, textarea, select, .RecipeEditor_uploadArea {
+    border-color: var(--color-error);
+  }
+}
+.Error_wrapper .RecipeEditor_ingredients, .Error_wrapper .RecipeEditor_instructions {
+  input, select, textarea {
+    border-color: var(--color-border);
+  }
+} 
+.Error_Group {
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+}
+.Error_message {
+  color: var(--color-error);
+  font-weight: var(--weight-bold);
+  padding-block: var(--space-sm);
+  display: block;
+}
+.Error_summary {
+  padding-block: var(--space-md);
+  span {
+    font-weight: var(--weight-bold);
+    color: var(--color-error);
+  }
+  li {
+    margin-top: var(--space-xs);
+    margin-inline-start: var(--space-md);
+    list-style-type: disc;
+  }
 }
 
 

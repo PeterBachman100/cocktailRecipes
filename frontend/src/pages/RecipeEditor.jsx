@@ -8,7 +8,7 @@ const ENUMS = {
     spirits: ['whiskey', 'bourbon', 'rye', 'scotch', 'rum', 'vodka', 'tequila / mezcal', 'cognac', 'brandy', 'gin', 'fortified wine', 'liqueur', 'other'], 
     cocktailType: ['classic', 'modern classic', 'tiki & tropical', 'coffee & dessert', 'shots & shooters', 'punches', 'other'], 
     flavors: ['bitter', 'sweet', 'savory', 'sour', 'spiced', 'fruity', 'smoky', 'herbal'], 
-    units: ['oz', 'ml', 'g', 'tsp', 'tbsp', 'dash', 'drop', 'barspoon', 'part', 'count', 'top', 'garnish'] 
+    units: ['oz', 'ml', 'g', 'tsp', 'tbsp', 'dash', 'drop', 'barspoon', 'part', 'count', 'top', 'garnish', 'pinch'] 
 };
 
 const getInitialState = () => ({
@@ -27,6 +27,31 @@ const getInitialState = () => ({
 const NEW_INGREDIENT = { name: '', amount: '', unit: 'oz' };
 const NEW_STEP = { instruction: '', tip: '' };
 
+const getValidationErrors = (recipe, imageFile, isEditMode) => {
+    const errs = {};
+    const activeIngs = recipe.ingredients.filter(ing => ing.name.trim() !== '' || ing.amount !== '');
+    const activeSteps = recipe.steps.filter(step => step.instruction.trim() !== '');
+
+    if (!recipe.title?.trim()) errs.title = "Title is required.";
+    if (!recipe.description?.trim()) errs.description = "Description is required.";
+    if (!recipe.cocktailType) errs.cocktailType = "Please select a cocktail type.";
+    if (!recipe.spirits || recipe.spirits.length === 0) errs.spirits = "Select at least one spirit.";
+    if (!recipe.flavors || recipe.flavors.length === 0) errs.flavors = 'Select at least one flavor';
+    if (activeIngs.length === 0) {
+        errs.ingredients = "Add at least one ingredient";
+    } else if (activeIngs.some(i => !i.name.trim() || !i.amount)) {
+        errs.ingredients = 'All ingredients need both a name and a quantity';
+    }
+    if (activeSteps.length === 0) errs.instructions = 'Add at least one instruction step';
+    
+    const hasImage = imageFile || (isEditMode && recipe.image);
+    if (!hasImage) {
+        errs.image = "Image is required.";
+    }
+    
+    return errs;
+};
+
 const RecipeEditor = () => {
     const navigate = useNavigate();
     const { triggerRefresh } = useOutletContext() || {};
@@ -36,6 +61,7 @@ const RecipeEditor = () => {
     
     const [imageFile, setImageFile] = useState(null);
     const [recipe, setRecipe] = useState(getInitialState());
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         if (isEditMode && id) {
@@ -64,6 +90,22 @@ const RecipeEditor = () => {
     const handleArrayUpdate = (field, index, key, value) => {
         const updated = [...recipe[field]];
         updated[index][key] = value;
+
+        // Check if we should auto-add a new row
+        const lastRow = updated[updated.length - 1];
+        
+        // Logic: If the user is typing in the last row and it's no longer empty, add one more
+        const isIngredients = field === 'ingredients';
+        
+        // Check if the last row is "filled" (adjust criteria as needed)
+        const lastRowFilled = isIngredients 
+            ? (lastRow.name.trim() !== '' && lastRow.amount !== '')
+            : (lastRow.instruction.trim() !== '');
+
+        if (lastRowFilled) {
+            updated.push(isIngredients ? { ...NEW_INGREDIENT } : { ...NEW_STEP });
+        }
+
         setRecipe({ ...recipe, [field]: updated });
     };
 
@@ -77,17 +119,27 @@ const RecipeEditor = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const validationErrors = getValidationErrors(recipe, imageFile, isEditMode);
+
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+        setErrors({});
+
         const formData = new FormData();
         
-        // Standard strings
         formData.append('title', recipe.title);
         formData.append('description', recipe.description);
         formData.append('notes', recipe.notes);
         formData.append('cocktailType', recipe.cocktailType);
         
-        // Complex fields (must be stringified for parseJsonFields)
-        formData.append('ingredients', JSON.stringify(recipe.ingredients));
-        formData.append('steps', JSON.stringify(recipe.steps));
+        const finalIngs = recipe.ingredients.filter(ing => ing.name.trim() !== '');
+        const finalSteps = recipe.steps.filter(step => step.instruction.trim() !== '');
+        
+        formData.append('ingredients', JSON.stringify(finalIngs));
+        formData.append('steps', JSON.stringify(finalSteps));
         formData.append('spirits', JSON.stringify(recipe.spirits));
         formData.append('flavors', JSON.stringify(recipe.flavors));
         
@@ -134,44 +186,62 @@ const RecipeEditor = () => {
 
                 <div className="RecipeEditor_intro">
                     
-                    <div>
+                    <div className={`RecipeEditor_title ${errors.title ? 'Error_wrapper' : ''}`}>
+                        {errors.title && <span className='Error_message'>{errors.title}</span>}
                         <label className="RecipeEditor_inputLabel" htmlFor="title">Title</label>
                         <input 
-                            value={recipe.title} required id="title"
-                            onChange={e => setRecipe({...recipe, title: e.target.value})}
-                            className="RecipeEditor_title"
+                            value={recipe.title} id="title"
+                            onChange={e => {
+                                setRecipe({...recipe, title: e.target.value});
+                            }}
+                            className="RecipeEditor_title_input"
                         />
                     </div>
                     
-                    <div>
+                    <div className={`RecipeEditor_description ${errors.description ? 'Error_wrapper' : ''}`}>
+                        {errors.description && <span className='Error_message'>{errors.description}</span>}
                         <label className="RecipeEditor_inputLabel" htmlFor="description">Description</label>
                         <textarea 
-                            className="RecipeEditor_description"
-                            required id="description"
+                            className="RecipeEditor_description_input"
+                            id="description"
                             value={recipe.description}
-                            onChange={e => setRecipe({...recipe, description: e.target.value})}
+                            onChange={e => {
+                                setRecipe({...recipe, description: e.target.value});
+                            }}
                         /> 
                     </div>
                         
                     
                     <div className="RecipeEditor_badges">
-                        <div>
+                        <div className={errors.spirits ? 'Error_wrapper Error_Group' : ''}>
+                             {errors.spirits && <span className='Error_message'>{errors.spirits}</span>}
                             <span className="RecipeEditor_inputLabel">Spirits</span>
-                            <CheckboxGroup name='spirits' options={ENUMS.spirits} selectedValues={recipe.spirits} onChange={toggleTag} required={true} />
+                            <CheckboxGroup name='spirits' options={ENUMS.spirits} selectedValues={recipe.spirits} 
+                            onChange={(name, value) => {
+                                toggleTag(name, value);
+                            }}/>
                         </div>
-                        <div>
+                        <div className={errors.flavors ? 'Error_wrapper Error_Group' : ''}>
+                            {errors.flavors && <span className='Error_message'>{errors.flavors}</span>}
                             <span className="RecipeEditor_inputLabel">Flavors</span>
-                            <CheckboxGroup name="flavors" options={ENUMS.flavors} selectedValues={recipe.flavors} onChange={toggleTag} required={true} />
+                            <CheckboxGroup name="flavors" options={ENUMS.flavors} selectedValues={recipe.flavors} 
+                            onChange={(name, value) => {
+                                toggleTag(name, value);
+                            }} 
+                            />
                         </div>
                     </div>
                     
-                    <div className='RecipeEditor_selectGroup'>
+                    <div className={`RecipeEditor_selectGroup ${errors.cocktailType ? 'Error_wrapper' : ''}`}>
+                        {errors.cocktailType && <span className='Error_message'>{errors.cocktailType}</span>}
                         <label htmlFor="cocktailType" className="RecipeEditor_inputLabel">Cocktail Type</label>
                         <select 
                             id="cocktailType"
                             name="cocktailType" 
                             value={recipe.cocktailType} 
-                            onChange={(e) => setRecipe({...recipe, cocktailType: e.target.value})}
+                            onChange={(e) => {
+                                setRecipe({...recipe, cocktailType: e.target.value});
+                            }}
                             className='RecipeEditor_select'
                         >
                             <option value="" disabled>Select a type...</option>
@@ -185,16 +255,18 @@ const RecipeEditor = () => {
                 </div>
 
                 <div className="RecipeEditor_content">
-                    <div>
+                    <div className={errors.ingredients ? 'Error_wrapper Error_Group' : ''}>
+                        {errors.ingredients && <span className='Error_message'>{errors.ingredients}</span>}
                         <span className="RecipeEditor_inputLabel">Ingredients</span>
-                        <div className='RecipeEditor_ingredients'>
+                        <div className="RecipeEditor_ingredients">
                             {recipe.ingredients.map((ingredient, idx) => (
                             <div key={idx} className="RecipeEditor_ingredientRow">
                                 <input 
                                     type="number" placeholder="1"
                                     value={ingredient.amount}
-                                    onChange={e => handleArrayUpdate('ingredients', idx, 'amount', e.target.value)}
-                                    required 
+                                    onChange={e => {
+                                        handleArrayUpdate('ingredients', idx, 'amount', e.target.value);
+                                    }}
                                 />
                                 <select value={ingredient.unit} onChange={e => handleArrayUpdate('ingredients', idx, 'unit', e.target.value)}>
                                     {ENUMS.units.map(u => <option key={u} value={u}>{u}</option>)}
@@ -203,7 +275,6 @@ const RecipeEditor = () => {
                                     placeholder="Ingredient"
                                     value={ingredient.name}
                                     onChange={e => handleArrayUpdate('ingredients', idx, 'name', e.target.value)}
-                                    required
                                 />
                                 <button type="button" onClick={() => removeRow('ingredients', idx)} className="RecipeEditor_iconBtn--delete">
                                     <Trash2 size={12} />
@@ -215,7 +286,8 @@ const RecipeEditor = () => {
                             </button>
                         </div>
                     </div>
-                    <div>
+                    <div className={errors.instructions ? 'Error_wrapper Error_Group' : ''}>
+                        {errors.instructions && <span className='Error_message'>{errors.instructions}</span>}
                         <span className="RecipeEditor_inputLabel">Instructions</span>
                         <div className='RecipeEditor_instructions'>
                             {recipe.steps.map((step, idx) => (
@@ -224,7 +296,6 @@ const RecipeEditor = () => {
                                     value={step.instruction}
                                     className="RecipeEditor_instruction"
                                     onChange={e => handleArrayUpdate('steps', idx, 'instruction', e.target.value)}
-                                    required
                                 />
                                 <textarea
                                     value={step.tip}
@@ -253,7 +324,8 @@ const RecipeEditor = () => {
                     </div>
                 </div>
 
-                <div className='RecipeEditor_image'>
+                <div className={`RecipeEditor_image ${errors.image ? 'Error_wrapper' : ''}`}>
+                    {errors.image && <span className='Error_message'>{errors.image}</span>}
                     <span className='RecipeEditor_inputLabel'>Image</span>
                     <label className="RecipeEditor_uploadArea">
                         <span>{imageFile ? imageFile.name : (isEditMode ? "Update image" : "Select image")}</span>
@@ -263,6 +335,15 @@ const RecipeEditor = () => {
                     <img src={recipe.image || null} alt={recipe.title} className="RecipeDetails_image" />
                 </div>
                 
+                {Object.keys(errors).length > 0 && (
+                <div className="Error_summary">
+                    <span>Please correct the following errors:</span>
+                    <ul>
+                        {Object.values(errors).map((msg, i) => <li key={i}>{msg}</li>)}
+                    </ul>
+                </div>
+            )}
+
                 <button type='submit' className='RecipeEditor_submitBtn'>Save</button>
 
                 <div className='RecipeEditor_delete'>

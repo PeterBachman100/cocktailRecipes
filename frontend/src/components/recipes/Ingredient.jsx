@@ -22,7 +22,8 @@ function Ingredient ({ name, amount, unit }) {
       'part': 'parts',
       'barspoon': 'barspoons',
       'tsp': 'tsps',
-      'tbsp': 'tbsps'
+      'tbsp': 'tbsps',
+      'pinch': 'pinches',
     };
 
     return (
