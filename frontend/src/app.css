@@ -703,6 +703,19 @@ input[type=number] {
 .RecipeDetails_editButton:hover {
   color: var(--color-accent);
 }
+.RecipeDetails_saveButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-secondary);
+  transition: all 0.2s ease;
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+}
+.RecipeDetails_saveButton:hover {
+  color: var(--color-accent);
+}
 .RecipeDetails_intro {
   display: flex;
   flex-direction: column;

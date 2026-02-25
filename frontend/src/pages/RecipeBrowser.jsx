@@ -6,7 +6,7 @@ import useRecipeFilters from '../hooks/useRecipeFilters';
 import { SlidersHorizontal, ChevronUp } from 'lucide-react';
 
 
-const RecipeBrowser = () => {
+const RecipeBrowser = ({ isPersonal = false }) => {
     const { id } = useParams();
     const { pathname } = useLocation();
     
@@ -55,10 +55,10 @@ const RecipeBrowser = () => {
                         
                     </button>
                 </div>
-                <RecipeList filters={filters} refreshTrigger={refreshTrigger} isRefreshing={isPending} />
+                <RecipeList filters={filters} refreshTrigger={refreshTrigger} isRefreshing={isPending} isPersonal={isPersonal} />
             </aside>
             <main className='RecipeBrowser_main'>
-                <Outlet context={{ triggerRefresh }} />
+                <Outlet context={{ triggerRefresh, isPersonal }} />
             </main>
         </div>
     );

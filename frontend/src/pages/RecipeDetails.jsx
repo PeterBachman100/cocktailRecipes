@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CircleOff, Pencil } from 'lucide-react';
+import { useParams, useNavigate, useLocation, useOutletContext } from 'react-router-dom';
+import { ArrowLeft, CircleOff, Pencil, BookmarkPlus, BookmarkCheck, CloudAlert } from 'lucide-react';
 import { MoonLoader } from 'react-spinners';
 import api from '../api/axios.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -10,16 +10,43 @@ import placeholderImage from '../assets/placeholder.png';
 
 function RecipeDetails() {
   const { isAdmin } = useAuth();
+  const { isPersonal } = useOutletContext();
+  const canEdit = isPersonal || isAdmin;
+
   const { id } = useParams();
   const navigate = useNavigate();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [saveStatus, setSaveStatus]= useState('idle'); //idle, loading, success, failure
+
+  const handleBack = () => {
+    if (isPersonal) {
+      navigate('/my-recipes');
+    } else {
+      navigate('/');
+    }
+  }
+ 
+  const handleSaveToLibrary = async () => {
+    setSaveStatus('loading');
+    
+    try {
+        await api.post(`/api/private-recipes/copy/${id}`);
+        setSaveStatus('success');
+        setTimeout(() => setSaveStatus('idle'), 3000);
+    } catch (err) {
+        console.error("Save failed", err);
+        setSaveStatus('error');
+        setTimeout(() => setSaveStatus('idle'), 3000);
+    }
+};
 
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
+        const endpoint = isPersonal ? `/api/private-recipes/${id}` : `/api/public-recipes/${id}`
         setLoading(true);
-        const response = await api.get(`/api/public-recipes/${id}`);
+        const response = await api.get(endpoint);
         setRecipe(response.data);
       } catch (error) {
         console.error("Error fetching recipe:", error);
@@ -35,7 +62,7 @@ function RecipeDetails() {
       <header className="RecipeDetails_nav">
          <button 
            className="RecipeDetails_backButton" 
-           onClick={() => navigate('/')}
+           onClick={handleBack}
          >
            <ArrowLeft size={20} />
            <span>Back to Library</span>
@@ -44,7 +71,7 @@ function RecipeDetails() {
       <main className='RecipeDetails_main'>
         <div className='RecipeDetails_error'>
           <h2>Loading Recipe...</h2>
-          <MoonLoader loading='true' color='var(--color-accent)' size='100' speedMultiplier='0.5'/>
+          <MoonLoader loading='true' color='var(--color-accent)' size='100px' speedMultiplier='0.5'/>
         </div>
       </main>
     </div>
@@ -55,7 +82,7 @@ function RecipeDetails() {
       <header className="RecipeDetails_nav">
          <button 
            className="RecipeDetails_backButton" 
-           onClick={() => navigate('/')}
+           onClick={handleBack}
          >
            <ArrowLeft size={20} />
            <span>Back to Library</span>
@@ -76,7 +103,7 @@ function RecipeDetails() {
       <header className="RecipeDetails_nav">
         <button 
           className="RecipeDetails_backButton" 
-          onClick={() => navigate('/')}
+          onClick={handleBack}
         >
           <ArrowLeft size={20} />
           <span>Back to Library</span>
@@ -88,14 +115,29 @@ function RecipeDetails() {
         <div className="RecipeDetails_intro">
             <div className='RecipeDetails_header'>
               <h1 className="RecipeDetails_title">{recipe.title}</h1>
-              {isAdmin && 
-                <button 
-                  className='RecipeDetails_editButton' 
-                  onClick={() => navigate(`/recipe/${id}/edit`)}
-                >
-                  <Pencil size={16} />
-                </button>
-              }
+              <div>
+                {canEdit && 
+                  <button 
+                    className='RecipeDetails_editButton' 
+                    onClick={() => navigate('edit')}
+                  >
+                    <Pencil size={16} />
+                  </button>
+                }
+                {!isPersonal && (
+                  <button 
+                    className={`RecipeDetails_saveButton RecipeDetails_saveButton--${saveStatus}`}
+                    onClick={handleSaveToLibrary}
+                    disabled={saveStatus !== 'idle'}
+                  >
+                    {saveStatus === 'idle' && <BookmarkPlus size={16} />}
+                    {saveStatus === 'loading' && <MoonLoader size="16px" />}
+                    {saveStatus === 'success' && <BookmarkCheck size={16} color={'var(--color-accent)'}/>}
+                    {saveStatus === 'error' && <><CloudAlert size={16} color={'var(--color-error'} /><span> Error saving, please try again.</span></> }
+                  </button>
+                )}
+                  
+              </div>
             </div>
             <p className='RecipeDetails_description'>{recipe.description}</p>
             <div className="RecipeDetails_badges">
@@ -121,9 +163,11 @@ function RecipeDetails() {
                     </li>
                 ))}
             </ol>
-            <div className='RecipeDetails_notes'>
+            {recipe.notes.lenth > 0 && (
+              <div className='RecipeDetails_notes'>
                 <p>{recipe.notes}</p>
-            </div>
+              </div>
+            )}
         </div>
 
         <img src={recipe.image ? recipe.image : placeholderImage} alt={recipe.title} className="RecipeDetails_image" />

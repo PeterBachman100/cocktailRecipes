@@ -54,7 +54,7 @@ const getValidationErrors = (recipe, imageFile, isEditMode) => {
 
 const RecipeEditor = () => {
     const navigate = useNavigate();
-    const { triggerRefresh } = useOutletContext() || {};
+    const { triggerRefresh, isPersonal } = useOutletContext() || {};
     const { id } = useParams();
     const location = useLocation();
     const isEditMode = location.pathname.includes('/edit');
@@ -63,11 +63,18 @@ const RecipeEditor = () => {
     const [recipe, setRecipe] = useState(getInitialState());
     const [errors, setErrors] = useState({});
 
+    const basePath = isPersonal ? '/my-recipes' : '/';
+    const baseEndpoint = isPersonal ? '/api/private-recipes' : '/api/public-recipes'
+
+    const handleBack = () => {
+        navigate(basePath);
+    }
+
     useEffect(() => {
         if (isEditMode && id) {
             const fetchRecipe = async () => {
                 try {
-                    const response = await api.get(`/api/public-recipes/${id}`);
+                    const response = await api.get(`${baseEndpoint}/${id}`);
                     setRecipe(response.data);
                 } catch (error) {
                     console.error("Error fetching recipe:", error);
@@ -148,13 +155,13 @@ const RecipeEditor = () => {
         try {
             let res;
             if (isEditMode) {
-                res = await api.patch(`/api/public-recipes/${id}`, formData);
+                res = await api.patch(`${baseEndpoint}/${id}`, formData);
             } else {
-                res = await api.post('/api/public-recipes', formData);
+                res = await api.post(baseEndpoint, formData);
             }
             const recipeId = res.data._id;
             triggerRefresh();
-            navigate(`/recipe/${recipeId}`, { replace: true });
+            navigate(`${basePath}/${recipeId}`, { replace: true });
         } catch (err) {
             console.error(err.response?.data?.error || "Save failed");
         }
@@ -162,9 +169,9 @@ const RecipeEditor = () => {
 
     const handleDelete = async () => {
         try {
-            await api.delete(`/api/public-recipes/${id}`);
+            await api.delete(`${baseEndpoint}/${id}`);
             triggerRefresh();
-            navigate('/', { replace: true });
+            navigate(basePath, { replace: true });
         } catch(error) {
             console.error(error);
         }
@@ -175,7 +182,7 @@ const RecipeEditor = () => {
         <header className="RecipeEditor_nav">
          <button 
            className="RecipeEditor_backButton" 
-           onClick={() => navigate('/')}
+           onClick={handleBack}
             >
             <ArrowLeft size={20} />
             <span>Back to Library</span>

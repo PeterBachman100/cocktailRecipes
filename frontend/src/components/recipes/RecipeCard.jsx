@@ -2,10 +2,11 @@ import { NavLink } from 'react-router-dom';
 import BadgeList from './BadgeList';
 import placeholderImage from '../../assets/placeholder.png';
 
-function RecipeCard({ recipe }) {
+function RecipeCard({ recipe, isPersonal }) {
   
+  const path = isPersonal ? `/my-recipes/${recipe._id}` : `/recipe/${recipe._id}`;
   return (
-    <NavLink to={`/recipe/${recipe._id}`} className={({ isActive }) => `RecipeCard ${isActive ? 'active' : ''}`}>
+    <NavLink to={path} className={({ isActive }) => `RecipeCard ${isActive ? 'active' : ''}`}>
         <article className='RecipeCard_root'>
             <div className='RecipeCard_main'>
                 <img className='RecipeCard_image' src={recipe.image ? recipe.image : placeholderImage} alt={recipe.title} />

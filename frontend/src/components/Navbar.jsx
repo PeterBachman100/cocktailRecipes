@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, CirclePlus} from 'lucide-react';
+import { LogOut, CirclePlus, BookMarked} from 'lucide-react';
 
 const Navbar = () => {
     const { user, logout, isAdmin } = useAuth();
@@ -24,6 +24,10 @@ const Navbar = () => {
                                 <CirclePlus size={16} />
                             </Link>
                         )}
+
+                        <Link to='/my-recipes' className='Navbar_link'>
+                            <BookMarked size={16} />
+                        </Link>
                         
                         <button onClick={handleLogout} className='Navbar_link'>
                             <LogOut size={16} />

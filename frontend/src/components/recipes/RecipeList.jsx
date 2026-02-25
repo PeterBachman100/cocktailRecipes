@@ -4,7 +4,7 @@ import RecipeCard from './RecipeCard.jsx';
 import useDebounce from '../../hooks/useDebounce';
 import { MoonLoader } from 'react-spinners';
 
-function RecipeList({ filters, refreshTrigger }) {
+function RecipeList({ filters, refreshTrigger, isPersonal }) {
   
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,6 +16,10 @@ function RecipeList({ filters, refreshTrigger }) {
     const fetchRecipes = async () => {
       setLoading(true);
       try {
+        const endpoint = isPersonal ?
+          '/api/private-recipes' :
+          '/api/public-recipes';
+
         const params = new URLSearchParams();
 
         if (debouncedSearch) params.append('search', debouncedSearch);
@@ -26,7 +30,7 @@ function RecipeList({ filters, refreshTrigger }) {
         params.append('spiritsMatch', filters.spiritsMatch);
         params.append('flavorsMatch', filters.flavorsMatch);
 
-        const response = await api.get(`/api/public-recipes?${params.toString()}`);
+        const response = await api.get(`${endpoint}?${params.toString()}`);
         setRecipes(response.data); 
       } catch (error) {
         console.error("Failed to fetch recipes:", error);
@@ -36,13 +40,13 @@ function RecipeList({ filters, refreshTrigger }) {
     };
 
     fetchRecipes();
-  }, [debouncedSearch, filters.spirits, filters.spiritsMatch, filters.flavors, filters.flavorsMatch, filters.cocktailType, refreshTrigger]);
+  }, [debouncedSearch, filters.spirits, filters.spiritsMatch, filters.flavors, filters.flavorsMatch, filters.cocktailType, refreshTrigger, isPersonal]);
 
   if (loading) return (
     <div className='RecipeList_loadingWrapper'>
         <div className='RecipeList_loading'>
           <h2>Loading Recipes...</h2>
-          <MoonLoader loading='true' color='var(--color-accent)' size='100' speedMultiplier='0.5'/>
+          <MoonLoader loading='true' color='var(--color-accent)' size='100px' speedMultiplier='0.5'/>
         </div>
     </div>
   );
@@ -51,7 +55,7 @@ function RecipeList({ filters, refreshTrigger }) {
     <div className={`RecipeList_root`}>
       {recipes.length > 0 ? (
         recipes.map(recipe => (
-          <RecipeCard key={recipe._id} recipe={recipe} />
+          <RecipeCard key={recipe._id} recipe={recipe} isPersonal={isPersonal} />
         ))
       ) : (
         <p>No recipes found matching those filters.</p>
