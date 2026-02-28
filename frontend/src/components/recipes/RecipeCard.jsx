@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import BadgeList from './BadgeList';
 import placeholderImage from '../../assets/placeholder.png';
+import StarRating from '../utilities/StarRating';
 
 function RecipeCard({ recipe, isPersonal }) {
   
@@ -15,6 +16,12 @@ function RecipeCard({ recipe, isPersonal }) {
                     <BadgeList items={recipe.spirits} type="spirit" />
                     <BadgeList items={recipe.flavors} type="flavor" />
                     <p className='RecipeCard_description'>{recipe.description}</p>
+                    {recipe.rating && isPersonal ? 
+                      (<div className='RecipeCard_rating'>
+                        <StarRating value={recipe.rating} />
+                      </div>) : 
+                      ''
+                    }
                 </section>
             </div>
             

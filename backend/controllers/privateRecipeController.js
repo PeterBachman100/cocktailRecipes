@@ -76,7 +76,6 @@ const copyPublicRecipe = async (req, res) => {
             user: req.user.id,
             image: clonedImage,
             cloudinaryId: clonedId,
-            rating: 0 
         };
 
         const copy = await PrivateRecipe.create(copyData);

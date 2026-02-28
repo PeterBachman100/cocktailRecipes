@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import BadgeList from '../components/recipes/BadgeList.jsx';
 import Ingredient from '../components/recipes/Ingredient.jsx';
 import placeholderImage from '../assets/placeholder.png';
+import StarRating from '../components/utilities/StarRating.jsx';
 
 function RecipeDetails() {
   const { isAdmin } = useAuth();
@@ -111,7 +112,7 @@ function RecipeDetails() {
       </header>
 
       <main className="RecipeDetails_main">
-
+        {recipe.rating && isPersonal ? (<div className='RecipeDetails_rating'><StarRating value={recipe.rating} size={20}/></div>) : ''}
         <div className="RecipeDetails_intro">
             <div className='RecipeDetails_header'>
               <h1 className="RecipeDetails_title">{recipe.title}</h1>
@@ -163,11 +164,9 @@ function RecipeDetails() {
                     </li>
                 ))}
             </ol>
-            {recipe.notes.lenth > 0 && (
-              <div className='RecipeDetails_notes'>
-                <p>{recipe.notes}</p>
-              </div>
-            )}
+            <div className='RecipeDetails_notes'>
+              <p>{recipe.notes}</p>
+            </div>
         </div>
 
         <img src={recipe.image ? recipe.image : placeholderImage} alt={recipe.title} className="RecipeDetails_image" />

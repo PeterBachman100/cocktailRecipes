@@ -716,6 +716,9 @@ input[type=number] {
 .RecipeDetails_saveButton:hover {
   color: var(--color-accent);
 }
+.RecipeDetails_rating {
+  margin-left: var(--space-md);
+}
 .RecipeDetails_intro {
   display: flex;
   flex-direction: column;
@@ -1178,4 +1181,13 @@ input[type=number] {
   color: var(--color-primary);
   background-color: var(--color-accent);
   font-weight: var(--weight-bold);
+}
+
+
+
+
+
+/* ---------- Star Rating ---------- */
+.StarRating_container.is-editable .StarRating_stars {
+  cursor: pointer;
 }

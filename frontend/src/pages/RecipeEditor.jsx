@@ -3,6 +3,7 @@ import api from '../api/axios';
 import { useNavigate, useParams, useLocation, useOutletContext } from 'react-router-dom';
 import { Plus, Trash2, Upload, ArrowLeft } from 'lucide-react';
 import CheckboxGroup from '../components/utilities/CheckboxGroup';
+import StarRating from '../components/utilities/StarRating';
 
 const ENUMS = { 
     spirits: ['whiskey', 'bourbon', 'rye', 'scotch', 'rum', 'vodka', 'tequila / mezcal', 'cognac', 'brandy', 'gin', 'fortified wine', 'liqueur', 'other'], 
@@ -21,7 +22,8 @@ const getInitialState = () => ({
   steps: [{ instruction: '', tip: '' }],
   notes: '',
   image: '',
-  cloudinaryId: ''
+  cloudinaryId: '',
+  rating: 0
 });
 
 const NEW_INGREDIENT = { name: '', amount: '', unit: 'oz' };
@@ -63,7 +65,7 @@ const RecipeEditor = () => {
     const [recipe, setRecipe] = useState(getInitialState());
     const [errors, setErrors] = useState({});
 
-    const basePath = isPersonal ? '/my-recipes' : '/';
+    const basePath = isPersonal ? '/my-recipes' : '/recipe';
     const baseEndpoint = isPersonal ? '/api/private-recipes' : '/api/public-recipes'
 
     const handleBack = () => {
@@ -83,6 +85,13 @@ const RecipeEditor = () => {
             fetchRecipe();
         }
     }, [id, isEditMode]);
+
+    const handleRatingChange = (newRating) => {
+        setRecipe(prev => ({
+            ...prev,
+            rating: newRating
+        }));
+    };
 
     // Dynamic list handlers
     const addRow = (field, defaultValue) => {
@@ -137,6 +146,7 @@ const RecipeEditor = () => {
 
         const formData = new FormData();
         
+        formData.append('rating', recipe.rating);
         formData.append('title', recipe.title);
         formData.append('description', recipe.description);
         formData.append('notes', recipe.notes);
@@ -193,6 +203,19 @@ const RecipeEditor = () => {
 
                 <div className="RecipeEditor_intro">
                     
+                    {isPersonal ? (
+                        <div className='RecipeEditor_rating'>
+                            <label className="RecipeEditor_inputLabel">Rating</label>
+                            <StarRating 
+                                value={recipe.rating || 0} 
+                                onChange={handleRatingChange} 
+                                isEditable={true} 
+                                size={28} 
+                            />
+                        </div>
+                    ) : ''}
+                    
+
                     <div className={`RecipeEditor_title ${errors.title ? 'Error_wrapper' : ''}`}>
                         {errors.title && <span className='Error_message'>{errors.title}</span>}
                         <label className="RecipeEditor_inputLabel" htmlFor="title">Title</label>

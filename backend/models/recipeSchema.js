@@ -29,7 +29,8 @@ const recipe = {
   cocktailType: { type: String, enum: ENUMS.cocktailType },
   flavors: [{ type: String, enum: ENUMS.flavors }],
   image: { type: String },
-  cloudinaryId: { type: String }
+  cloudinaryId: { type: String },
+  rating: { type: Number, min: 0, max: 5, default: 0 }
 };
 
 module.exports = { recipe, ENUMS };
