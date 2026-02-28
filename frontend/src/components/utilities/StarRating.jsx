@@ -11,7 +11,8 @@ const StarRating = ({
 
     const handleClick = (rating) => {
         if (isEditable && onChange) {
-            onChange(rating);
+            if(value === rating) onChange(0);
+            else onChange(rating);
         }
     };
 
