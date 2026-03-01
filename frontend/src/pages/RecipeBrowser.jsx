@@ -4,11 +4,13 @@ import RecipeList from '../components/recipes/RecipeList';
 import RecipeFilter from '../components/recipes/RecipeFilter';
 import useRecipeFilters from '../hooks/useRecipeFilters';
 import { SlidersHorizontal, ChevronUp } from 'lucide-react';
+import { useFolders } from '../context/FolderContext';
 
 
 const RecipeBrowser = ({ isPersonal = false }) => {
     const { id } = useParams();
     const { pathname } = useLocation();
+    const { selectedFolderId } = useFolders();
     
     const isSplitView = id || pathname.includes('/new');
     const isFullWidth = !isSplitView;
@@ -55,7 +57,7 @@ const RecipeBrowser = ({ isPersonal = false }) => {
                         
                     </button>
                 </div>
-                <RecipeList filters={filters} refreshTrigger={refreshTrigger} isRefreshing={isPending} isPersonal={isPersonal} />
+                <RecipeList filters={{...filters, folderId: isPersonal ? selectedFolderId : null}} refreshTrigger={refreshTrigger} isRefreshing={isPending} isPersonal={isPersonal} />
             </aside>
             <main className='RecipeBrowser_main'>
                 <Outlet context={{ triggerRefresh, isPersonal }} />

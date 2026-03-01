@@ -22,6 +22,7 @@ function RecipeList({ filters, refreshTrigger, isPersonal }) {
 
         const params = new URLSearchParams();
 
+        if (isPersonal && filters.folderId) params.append('folderId', filters.folderId);
         if (debouncedSearch) params.append('search', debouncedSearch);
         if (filters.spirits.length) params.append('spirits', filters.spirits.join(','));
         if (filters.flavors.length) params.append('flavors', filters.flavors.join(','));
@@ -40,7 +41,7 @@ function RecipeList({ filters, refreshTrigger, isPersonal }) {
     };
 
     fetchRecipes();
-  }, [debouncedSearch, filters.spirits, filters.spiritsMatch, filters.flavors, filters.flavorsMatch, filters.cocktailType, refreshTrigger, isPersonal]);
+  }, [debouncedSearch, filters.spirits, filters.spiritsMatch, filters.flavors, filters.flavorsMatch, filters.cocktailType, filters.folderId, refreshTrigger, isPersonal]);
 
   if (loading) return (
     <div className='RecipeList_loadingWrapper'>

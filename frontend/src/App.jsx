@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
 import RecipeBrowser from './pages/RecipeBrowser';
 import RecipeDetails from './pages/RecipeDetails';
 import Login from './pages/Login'; 
@@ -6,17 +7,26 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import RecipeEditor from './pages/RecipeEditor'; 
 import Navbar from './components/Navbar';
 import './app.css';
+import FolderList from './components/FolderList';
+
 
 const EmptyState = ({message}) => (
   <div>{message}</div>
 );
 
 function App() {
+
+  const [foldersVisible, setFoldersVisible] = useState(false);
+  const handleFolderList = () => {
+    setFoldersVisible(!foldersVisible);
+  }
+
   return (
     <Router>
       <div className='App_wrapper'>
-        <Navbar />
+        <Navbar handleFolderList={handleFolderList} />
         <main className='App_content'>
+          <FolderList foldersVisible={foldersVisible} handleFolderList={handleFolderList} />
           <Routes>
 
             <Route path="/" element={<RecipeBrowser />}>

@@ -8,8 +8,19 @@ const { applyArrayFilter, parseJsonFields } = require("../utils/queryHelpers");
 
 const getPrivateRecipes = async (req,res) => {
     try {
-        const {spirits, spiritsMatch, flavors, flavorsMatch, seasons, seasonsMatch, cocktailType, search } = req.query;
+        const {spirits, spiritsMatch, flavors, flavorsMatch, seasons, seasonsMatch, cocktailType, search, folderId } = req.query;
         let query = { user: req.user.id };
+
+        if (folderId) {
+            const foundFolder = await Folder.findOne({ 
+                _id: folderId, 
+                ownerId: req.user.id 
+            });
+
+            if (!foundFolder) return res.json([]);
+
+            query._id = { $in: foundFolder.recipeIds };
+        }
 
         if (search) {
             query.$or = [
