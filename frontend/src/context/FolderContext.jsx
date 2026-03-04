@@ -38,6 +38,11 @@ export const FolderProvider = ({ children }) => {
         }
     };
 
+    const getFolderName = (id) => {
+        const folder = folders.find(f => f._id === id);
+        return folder ? folder.name : "Unknown Folder";
+    };
+
     const renameFolder = async (folderId, newName) => {
         try {
             const res = await api.patch(`/api/folders/${folderId}`, {name: newName});
@@ -50,7 +55,7 @@ export const FolderProvider = ({ children }) => {
 
     const addRecipeToFolder = async (folderId, recipeId) => {
         try {
-            const res = await api.post(`/api/folders/${folderId}/recipes`, { recipeId });
+            const res = await api.patch(`/api/folders/${folderId}/recipes`, { recipeId });
             setFolders(prev => prev.map(folder => folder._id === folderId ? res.data : folder));
             return res.data;
         } catch (err) {
@@ -92,7 +97,7 @@ export const FolderProvider = ({ children }) => {
     }, [user]);
 
     return (
-        <FolderContext.Provider value={{ folders, loading, selectedFolderId, setSelectedFolderId, clearFolderSelection, refreshFolders, createFolder, renameFolder, addRecipeToFolder, removeRecipeFromFolder, deleteFolder }}>
+        <FolderContext.Provider value={{ folders, loading, selectedFolderId, setSelectedFolderId, clearFolderSelection, refreshFolders, createFolder, getFolderName, renameFolder, addRecipeToFolder, removeRecipeFromFolder, deleteFolder }}>
             {children}
         </FolderContext.Provider>
     );

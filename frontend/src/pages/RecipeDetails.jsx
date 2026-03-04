@@ -8,6 +8,7 @@ import BadgeList from '../components/recipes/BadgeList.jsx';
 import Ingredient from '../components/recipes/Ingredient.jsx';
 import placeholderImage from '../assets/placeholder.png';
 import StarRating from '../components/utilities/StarRating.jsx';
+import FolderPicker from '../components/FolderPicker.jsx';
 
 function RecipeDetails() {
   const { isAdmin } = useAuth();
@@ -117,6 +118,7 @@ function RecipeDetails() {
             <div className='RecipeDetails_header'>
               <h1 className="RecipeDetails_title">{recipe.title}</h1>
               <div>
+                {isPersonal && <FolderPicker recipeId={recipe._id} />}
                 {canEdit && 
                   <button 
                     className='RecipeDetails_editButton' 

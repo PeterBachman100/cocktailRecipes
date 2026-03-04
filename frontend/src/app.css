@@ -1299,6 +1299,44 @@ input[type=number] {
   border-color: var(--color-error);
 }
 
+
+
+
+
+/* ---------- Folder Picker ---------- */
+.FolderPicker_root {
+    position: relative;
+    display: inline-block;
+}
+
+.FolderPicker_dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 100;
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    min-width: 180px;
+    padding: 8px;
+    margin-top: 4px;
+}
+
+.FolderPicker_dropdown button {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px;
+    text-align: left;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.FolderPicker_dropdown button:hover {
+    background: var(--color-bg-hover);
+}
+
 /* ---------- Star Rating ---------- */
 .StarRating_container.is-editable .StarRating_stars {
   cursor: pointer;

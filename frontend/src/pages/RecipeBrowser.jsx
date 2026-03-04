@@ -10,7 +10,17 @@ import { useFolders } from '../context/FolderContext';
 const RecipeBrowser = ({ isPersonal = false }) => {
     const { id } = useParams();
     const { pathname } = useLocation();
-    const { selectedFolderId } = useFolders();
+    const { selectedFolderId, getFolderName } = useFolders();
+
+    let currentTitle = "The Library"; 
+
+    if (isPersonal) {
+        if (selectedFolderId) {
+            currentTitle = `Folder: ${getFolderName(selectedFolderId)}`;
+        } else {
+            currentTitle = "Saved Recipes";
+        }
+    }
     
     const isSplitView = id || pathname.includes('/new');
     const isFullWidth = !isSplitView;
@@ -57,6 +67,7 @@ const RecipeBrowser = ({ isPersonal = false }) => {
                         
                     </button>
                 </div>
+                <div><h1>{currentTitle}</h1></div>
                 <RecipeList filters={{...filters, folderId: isPersonal ? selectedFolderId : null}} refreshTrigger={refreshTrigger} isRefreshing={isPending} isPersonal={isPersonal} />
             </aside>
             <main className='RecipeBrowser_main'>
