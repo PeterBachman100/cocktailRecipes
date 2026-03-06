@@ -4,34 +4,35 @@ import RecipeCard from './RecipeCard.jsx';
 import useDebounce from '../../hooks/useDebounce';
 import { MoonLoader } from 'react-spinners';
 
-function RecipeList({ filters, refreshTrigger, isPersonal }) {
-  
+function RecipeList({ filters, refreshTrigger, isPrivate }) {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Debounce the search term to prevent API spamming while typing
   const debouncedSearch = useDebounce(filters.search, 500);
 
   useEffect(() => {
-    
     const fetchRecipes = async () => {
       setLoading(true);
       try {
-        const endpoint = isPersonal ?
-          '/api/private-recipes' :
-          '/api/public-recipes';
+        const endpoint = isPrivate ? '/api/private-recipes' : '/api/public-recipes';
 
-        const params = new URLSearchParams();
+        // Axios handles object-to-query-string conversion automatically
+        const params = {
+          search: debouncedSearch,
+          spirits: filters.spirits.join(','),
+          flavors: filters.flavors.join(','),
+          cocktailType: filters.cocktailType.join(','),
+          spiritsMatch: filters.spiritsMatch,
+          flavorsMatch: filters.flavorsMatch,
+        };
 
-        if (isPersonal && filters.folderId) params.append('folderId', filters.folderId);
-        if (debouncedSearch) params.append('search', debouncedSearch);
-        if (filters.spirits.length) params.append('spirits', filters.spirits.join(','));
-        if (filters.flavors.length) params.append('flavors', filters.flavors.join(','));
-        if (filters.cocktailType.length) params.append('cocktailType', filters.cocktailType.join(','));
+        // Only add folderId if we are in the personal collection and it exists
+        if (isPrivate && filters.folderId) {
+          params.folderId = filters.folderId;
+        }
 
-        params.append('spiritsMatch', filters.spiritsMatch);
-        params.append('flavorsMatch', filters.flavorsMatch);
-
-        const response = await api.get(`${endpoint}?${params.toString()}`);
+        const response = await api.get(endpoint, { params });
         setRecipes(response.data); 
       } catch (error) {
         console.error("Failed to fetch recipes:", error);
@@ -41,28 +42,45 @@ function RecipeList({ filters, refreshTrigger, isPersonal }) {
     };
 
     fetchRecipes();
-  }, [debouncedSearch, filters.spirits, filters.spiritsMatch, filters.flavors, filters.flavorsMatch, filters.cocktailType, filters.folderId, refreshTrigger, isPersonal]);
+    // Use joined strings for arrays to ensure the effect only fires when values actually change
+  }, [
+    debouncedSearch, 
+    filters.spirits.join(','), 
+    filters.spiritsMatch, 
+    filters.flavors.join(','), 
+    filters.flavorsMatch, 
+    filters.cocktailType.join(','), 
+    filters.folderId, 
+    refreshTrigger, 
+    isPrivate
+  ]);
 
   if (loading) return (
     <div className='RecipeList_loadingWrapper'>
         <div className='RecipeList_loading'>
-          <h2>Loading Recipes...</h2>
-          <MoonLoader loading='true' color='var(--color-accent)' size='100px' speedMultiplier='0.5'/>
+          <MoonLoader color='var(--color-accent)' size={60} speedMultiplier={0.5}/>
+          <p>Finding the perfect drink...</p>
         </div>
     </div>
   );
 
   return (
-    <div className={`RecipeList_root`}>
+    <div className="RecipeList_root">
       {recipes.length > 0 ? (
         recipes.map(recipe => (
-          <RecipeCard key={recipe._id} recipe={recipe} isPersonal={isPersonal} />
+          <RecipeCard 
+            key={recipe._id} 
+            recipe={recipe} 
+            isPrivate={isPrivate} 
+          />
         ))
       ) : (
-        <p>No recipes found matching those filters.</p>
+        <div className="RecipeList_empty">
+          <p>No recipes found matching those filters.</p>
+        </div>
       )}
     </div>
   );
-};
+}
 
 export default RecipeList;

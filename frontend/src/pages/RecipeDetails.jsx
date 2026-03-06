@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation, useOutletContext } from 'react-router-dom';
-import { ArrowLeft, CircleOff, Pencil, BookmarkPlus, BookmarkCheck, CloudAlert } from 'lucide-react';
+import { ArrowLeft, X, CircleOff, Pencil, BookmarkPlus, BookmarkCheck, CloudAlert } from 'lucide-react';
 import { MoonLoader } from 'react-spinners';
 import api from '../api/axios.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -12,21 +12,21 @@ import FolderPicker from '../components/FolderPicker.jsx';
 
 function RecipeDetails() {
   const { isAdmin } = useAuth();
-  const { isPersonal } = useOutletContext();
-  const canEdit = isPersonal || isAdmin;
+  const { isPrivate } = useOutletContext();
+  const canEdit = isPrivate || isAdmin;
 
   const { id } = useParams();
+
+  const basePath = isPrivate ? '/my-recipes' : '/recipes';
+  const { search } = useLocation();
   const navigate = useNavigate();
+
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus]= useState('idle'); //idle, loading, success, failure
 
-  const handleBack = () => {
-    if (isPersonal) {
-      navigate('/my-recipes');
-    } else {
-      navigate('/');
-    }
+  const handleClose = () => {
+    navigate(`${basePath}${search}`);
   }
  
   const handleSaveToLibrary = async () => {
@@ -46,7 +46,7 @@ function RecipeDetails() {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const endpoint = isPersonal ? `/api/private-recipes/${id}` : `/api/public-recipes/${id}`
+        const endpoint = isPrivate ? `/api/private-recipes/${id}` : `/api/public-recipes/${id}`
         setLoading(true);
         const response = await api.get(endpoint);
         setRecipe(response.data);
@@ -64,10 +64,10 @@ function RecipeDetails() {
       <header className="RecipeDetails_nav">
          <button 
            className="RecipeDetails_backButton" 
-           onClick={handleBack}
+           onClick={handleClose}
          >
-           <ArrowLeft size={20} />
-           <span>Back to Library</span>
+           <X size={20} />
+           <span>Close</span>
          </button>
        </header>
       <main className='RecipeDetails_main'>
@@ -84,10 +84,10 @@ function RecipeDetails() {
       <header className="RecipeDetails_nav">
          <button 
            className="RecipeDetails_backButton" 
-           onClick={handleBack}
+           onClick={handleClose}
          >
-           <ArrowLeft size={20} />
-           <span>Back to Library</span>
+           <X size={20} />
+           <span>Close</span>
          </button>
        </header>
       <main className='RecipeDetails_main'>
@@ -105,20 +105,20 @@ function RecipeDetails() {
       <header className="RecipeDetails_nav">
         <button 
           className="RecipeDetails_backButton" 
-          onClick={handleBack}
+          onClick={handleClose}
         >
-          <ArrowLeft size={20} />
-          <span>Back to Library</span>
+          <X size={20} />
+          <span>Close</span>
         </button>
       </header>
 
       <main className="RecipeDetails_main">
-        {recipe.rating && isPersonal ? (<div className='RecipeDetails_rating'><StarRating value={recipe.rating} size={20}/></div>) : ''}
+        {recipe.rating && isPrivate ? (<div className='RecipeDetails_rating'><StarRating value={recipe.rating} size={20}/></div>) : ''}
         <div className="RecipeDetails_intro">
             <div className='RecipeDetails_header'>
               <h1 className="RecipeDetails_title">{recipe.title}</h1>
               <div>
-                {isPersonal && <FolderPicker recipeId={recipe._id} />}
+                {isPrivate && <FolderPicker recipeId={recipe._id} />}
                 {canEdit && 
                   <button 
                     className='RecipeDetails_editButton' 
@@ -127,7 +127,7 @@ function RecipeDetails() {
                     <Pencil size={16} />
                   </button>
                 }
-                {!isPersonal && (
+                {!isPrivate && (
                   <button 
                     className={`RecipeDetails_saveButton RecipeDetails_saveButton--${saveStatus}`}
                     onClick={handleSaveToLibrary}

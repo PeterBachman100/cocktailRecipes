@@ -440,6 +440,10 @@ input[type=number] {
   overflow: hidden;
 }
 
+.RecipeCard.active .RecipeCard_root {
+  box-shadow: 0 0 0 4px var(--color-accent);
+}
+
 
 
 

@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LogOut, CirclePlus, BookMarked, Folder} from 'lucide-react';
 
-const Navbar = ({handleFolderList}) => {
+const Navbar = ({handleFoldersVisible}) => {
     const { user, logout, isAdmin } = useAuth();
     const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ const Navbar = ({handleFolderList}) => {
                             </Link>
                         )}
 
-                        <button className='Navbar_link' onClick={handleFolderList}>
+                        <button className='Navbar_link' onClick={handleFoldersVisible}>
                             <Folder size={16} />
                         </button>
 

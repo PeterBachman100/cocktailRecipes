@@ -6,11 +6,8 @@ export const FolderContext = createContext();
 
 export const FolderProvider = ({ children }) => {
     const [folders, setFolders] = useState([]);
-    const [selectedFolderId, setSelectedFolderId] = useState(null);
     const [loading, setLoading] = useState(false);
     const { user } = useAuth(); 
-
-    const clearFolderSelection = () => setSelectedFolderId(null);
 
     const refreshFolders = async () => {
         if (!user) {
@@ -97,7 +94,7 @@ export const FolderProvider = ({ children }) => {
     }, [user]);
 
     return (
-        <FolderContext.Provider value={{ folders, loading, selectedFolderId, setSelectedFolderId, clearFolderSelection, refreshFolders, createFolder, getFolderName, renameFolder, addRecipeToFolder, removeRecipeFromFolder, deleteFolder }}>
+        <FolderContext.Provider value={{ folders, loading, refreshFolders, createFolder, getFolderName, renameFolder, addRecipeToFolder, removeRecipeFromFolder, deleteFolder }}>
             {children}
         </FolderContext.Provider>
     );

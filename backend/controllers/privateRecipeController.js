@@ -33,9 +33,9 @@ const getPrivateRecipes = async (req,res) => {
 
         if (cocktailType) query.cocktailType = { $in: cocktailType.split(',') };
 
-        applyArrayFilter('spirits', spirits, spiritsMatch);
-        applyArrayFilter('flavors', flavors, flavorsMatch);
-        applyArrayFilter('seasons', seasons, seasonsMatch);
+        applyArrayFilter(query, 'spirits', spirits, spiritsMatch);
+        applyArrayFilter(query, 'flavors', flavors, flavorsMatch);
+        applyArrayFilter(query, 'seasons', seasons, seasonsMatch);
 
         const recipes = await PrivateRecipe.find(query).sort('-createdAt');
         res.json(recipes);

@@ -1,41 +1,67 @@
 import { useState, useCallback, useTransition } from 'react';
-import { Outlet, useParams, useLocation } from 'react-router-dom';
+import { Outlet, useParams, useSearchParams, useLocation } from 'react-router-dom';
 import RecipeList from '../components/recipes/RecipeList';
 import RecipeFilter from '../components/recipes/RecipeFilter';
-import useRecipeFilters from '../hooks/useRecipeFilters';
 import { SlidersHorizontal, ChevronUp } from 'lucide-react';
 import { useFolders } from '../context/FolderContext';
 
+const RecipeBrowser = () => {
+    const { getFolderName } = useFolders();
 
-const RecipeBrowser = ({ isPersonal = false }) => {
-    const { id } = useParams();
     const { pathname } = useLocation();
-    const { selectedFolderId, getFolderName } = useFolders();
+    const isPrivate = pathname.includes('my-recipes');
 
-    let currentTitle = "The Library"; 
-
-    if (isPersonal) {
-        if (selectedFolderId) {
-            currentTitle = `Folder: ${getFolderName(selectedFolderId)}`;
-        } else {
-            currentTitle = "Saved Recipes";
-        }
-    }
+    const [searchParams, setSearchParams] = useSearchParams();
+    const folderId = searchParams.get('folderId') || '';
+    const { id } = useParams();
     
-    const isSplitView = id || pathname.includes('/new');
-    const isFullWidth = !isSplitView;
+    const filters = {
+        folderId,
+        search: searchParams.get('search') || '',
+        spirits: searchParams.get('spirits')?.split(',').filter(Boolean) || [],
+        flavors: searchParams.get('flavors')?.split(',').filter(Boolean) || [],
+        cocktailType: searchParams.get('cocktailType')?.split(',').filter(Boolean) || [],
+        spiritsMatch: searchParams.get('spiritsMatch') || 'any',
+        flavorsMatch: searchParams.get('flavorsMatch') || 'any'
+    };
 
+    const updateField = (name, value) => {
+        const newParams = new URLSearchParams(searchParams);
+        if (value) newParams.set(name, value);
+        else newParams.delete(name);
+        setSearchParams(newParams);
+    };
+
+    const toggleArrayItem = (field, item) => {
+        const newParams = new URLSearchParams(searchParams);
+        const currentItems = filters[field];
+        const newItems = currentItems.includes(item)
+            ? currentItems.filter(i => i !== item)
+            : [...currentItems, item];
+        
+        if (newItems.length > 0) newParams.set(field, newItems.join(','));
+        else newParams.delete(field);
+        
+        setSearchParams(newParams);
+    };
+
+    const resetFilters = () => {
+        const newParams = new URLSearchParams();
+        if (folderId) newParams.set('folderId', folderId);
+        setSearchParams(newParams);
+    };
+
+    let title = isPrivate ? 'Saved Recipes' : 'The Library';
+    if (isPrivate && folderId) {
+        title = `Folder: ${getFolderName(folderId)}`;
+    }
+   
+    // 4. VIEW LOGIC
+    const isSplitView = id || pathname.includes('/new') || pathname.includes('/edit');
+    const isFullWidth = !isSplitView;
     const [filterHidden, setFilterHidden] = useState(true);
 
-    const { filters, updateField, toggleArrayItem, resetFilters } = useRecipeFilters({
-        search: '',
-        spirits: [],
-        spiritsMatch: 'any',
-        flavors: [],
-        flavorsMatch: 'any',
-        cocktailType: []
-    });
-
+    // 5. REFRESH LOGIC
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [isPending, startTransition] = useTransition();
     const triggerRefresh = useCallback(() => {
@@ -64,14 +90,23 @@ const RecipeBrowser = ({ isPersonal = false }) => {
                             <><SlidersHorizontal size={16} /><span>Filter Results</span></> :
                             <><ChevronUp size={16} />Hide Filters</>
                         }
-                        
                     </button>
                 </div>
-                <div><h1>{currentTitle}</h1></div>
-                <RecipeList filters={{...filters, folderId: isPersonal ? selectedFolderId : null}} refreshTrigger={refreshTrigger} isRefreshing={isPending} isPersonal={isPersonal} />
+                
+                <div className="RecipeBrowser_title">
+                    <h1>{title}</h1>
+                </div>
+
+                <RecipeList 
+                    filters={filters} 
+                    refreshTrigger={refreshTrigger} 
+                    isRefreshing={isPending} 
+                    isPrivate={isPrivate} 
+                />
             </aside>
+
             <main className='RecipeBrowser_main'>
-                <Outlet context={{ triggerRefresh, isPersonal }} />
+                <Outlet context={{ triggerRefresh, isPrivate, folderId }} />
             </main>
         </div>
     );

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import RecipeBrowser from './pages/RecipeBrowser';
 import RecipeDetails from './pages/RecipeDetails';
@@ -17,41 +17,55 @@ const EmptyState = ({message}) => (
 function App() {
 
   const [foldersVisible, setFoldersVisible] = useState(false);
-  const handleFolderList = () => {
+  const handleFoldersVisible = () => {
     setFoldersVisible(!foldersVisible);
   }
 
   return (
-    <Router>
+    <BrowserRouter>
       <div className='App_wrapper'>
-        <Navbar handleFolderList={handleFolderList} />
+        <Navbar handleFoldersVisible={handleFoldersVisible} />
         <main className='App_content'>
-          <FolderList foldersVisible={foldersVisible} handleFolderList={handleFolderList} />
+          <FolderList foldersVisible={foldersVisible} handleFoldersVisible={handleFoldersVisible} />
           <Routes>
 
-            <Route path="/" element={<RecipeBrowser />}>
-              <Route index element={<EmptyState />} />
-              <Route path="recipe/:id" element={<RecipeDetails />} />
+            {/* --- PUBLIC LIBRARY --- */}
+            <Route path="/recipes" element={<RecipeBrowser />}>
+              <Route index element={<EmptyState message="Select a drink to see the specs!" />} />
+              
+              {/* Admin-only: Create a new public recipe */}
               <Route element={<ProtectedRoute adminOnly={true} />}>
-                  <Route path="new" element={<RecipeEditor key='new' />} />
-                  <Route path="recipe/:id/edit" element={<RecipeEditor isEdit={true} key={window.location.pathname} />} />
+                <Route path="new" element={<RecipeEditor />} />
+                <Route path=":id/edit" element={<RecipeEditor />} />
               </Route>
+
+              {/* View a public recipe (must be below 'new' so it doesn't match /recipes/new) */}
+              <Route path=":id" element={<RecipeDetails />} />
             </Route>
 
-            <Route path="/login" element={<Login />} />
-
+            {/* --- SAVED RECIPES (Private) --- */}
             <Route element={<ProtectedRoute />}>
-              <Route path="/my-recipes" element={<RecipeBrowser isPersonal={true} />}>
+              <Route path="/my-recipes" element={<RecipeBrowser />}>
                 <Route index element={<EmptyState message="You haven't saved any recipes yet!" />} />
+                
+                {/* Create/Edit personal recipes */}
+                <Route path="new" element={<RecipeEditor />} />
+                <Route path=":id/edit" element={<RecipeEditor />} />
+                
+                {/* View a personal recipe */}
                 <Route path=":id" element={<RecipeDetails />} />
-                <Route path=":id/edit" element={<RecipeEditor isEdit={true} />} />
               </Route>
             </Route>
+
+
+            {/* --- GLOBAL REDIRECTS & AUTH --- */}
+            <Route path="/" element={<Navigate to="/recipes" replace />} />
+            <Route path="/login" element={<Login />} />
 
           </Routes>
         </main>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 }
 

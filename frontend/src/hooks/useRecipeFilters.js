@@ -1,37 +1,35 @@
-import { useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
-const useRecipeFilters = (initialState) => {
-  const [filters, setFilters] = useState(initialState);
+export const useRecipeFilters = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
 
-  const updateField = useCallback((field, value) => {
-    setFilters((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  }, []);
+    // 1. Parse URL into a clean object
+    const filters = {
+        search: searchParams.get('search') || '',
+        folderId: searchParams.get('folderId') || '',
+        spirits: searchParams.get('spirits')?.split(',').filter(Boolean) || [],
+        flavors: searchParams.get('flavors')?.split(',').filter(Boolean) || [],
+        cocktailType: searchParams.get('cocktailType')?.split(',').filter(Boolean) || [],
+        spiritsMatch: searchParams.get('spiritsMatch') || 'all',
+        flavorsMatch: searchParams.get('flavorsMatch') || 'all',
+    };
 
-  const toggleArrayItem = useCallback((field, value) => {
-    setFilters((prev) => {
-      const currentArray = prev[field] || [];
-      const isSelected = currentArray.includes(value);
-      
-      return {
-        ...prev,
-        [field]: isSelected
-          ? currentArray.filter((item) => item !== value)
-          : [...currentArray, value],
-      };
-    });
-  }, []);
+    // 2. Helper to update the URL
+    const setFilters = (newFilters) => {
+        const params = new URLSearchParams(searchParams);
+        
+        Object.entries(newFilters).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+                if (value.length > 0) params.set(key, value.join(','));
+                else params.delete(key);
+            } else if (value) {
+                params.set(key, value);
+            } else {
+                params.delete(key);
+            }
+        });
+        setSearchParams(params);
+    };
 
-  const resetFilters = () => setFilters(initialState);
-
-  return {
-    filters,
-    updateField,
-    toggleArrayItem,
-    resetFilters,
-  };
+    return { filters, setFilters };
 };
-
-export default useRecipeFilters;

@@ -56,8 +56,11 @@ const getValidationErrors = (recipe, imageFile, isEditMode) => {
 
 const RecipeEditor = () => {
     const navigate = useNavigate();
-    const { triggerRefresh, isPersonal } = useOutletContext() || {};
+    const context = useOutletContext();
+    const isPersonal = context?.isPersonal ?? false; 
+    const triggerRefresh = context?.triggerRefresh ?? (() => {});
     const { id } = useParams();
+    const { search } = useLocation();
     const location = useLocation();
     const isEditMode = location.pathname.includes('/edit');
     
@@ -65,11 +68,12 @@ const RecipeEditor = () => {
     const [recipe, setRecipe] = useState(getInitialState());
     const [errors, setErrors] = useState({});
 
-    const basePath = isPersonal ? '/my-recipes' : '/recipe';
+    const basePath = isPersonal ? '/my-recipes' : '/recipes';
     const baseEndpoint = isPersonal ? '/api/private-recipes' : '/api/public-recipes'
 
     const handleBack = () => {
-        navigate(basePath);
+        const destination = isEditMode ? `${basePath}/${id}${search}` : `${basePath}${search}`;
+        navigate(destination);
     }
 
     useEffect(() => {
@@ -84,7 +88,7 @@ const RecipeEditor = () => {
             }
             fetchRecipe();
         }
-    }, [id, isEditMode]);
+    }, [id, isEditMode, baseEndpoint]);
 
     const handleRatingChange = (newRating) => {
         setRecipe(prev => ({
@@ -171,7 +175,7 @@ const RecipeEditor = () => {
             }
             const recipeId = res.data._id;
             triggerRefresh();
-            navigate(`${basePath}/${recipeId}`, { replace: true });
+            navigate(`${basePath}/${recipeId}${search}`, { replace: true });
         } catch (err) {
             console.error(err.response?.data?.error || "Save failed");
         }
@@ -181,7 +185,7 @@ const RecipeEditor = () => {
         try {
             await api.delete(`${baseEndpoint}/${id}`);
             triggerRefresh();
-            navigate(basePath, { replace: true });
+            navigate(`${basePath}${search}`, { replace: true });
         } catch(error) {
             console.error(error);
         }
