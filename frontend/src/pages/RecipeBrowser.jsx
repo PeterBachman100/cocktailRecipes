@@ -82,21 +82,21 @@ const RecipeBrowser = () => {
                             resetFilters={resetFilters} 
                         />
                     </div>
-                    <button 
-                        className="RecipeFilter_visibilityToggle"
-                        onClick={() => setFilterHidden(!filterHidden)}
-                    >
-                        {filterHidden ? 
-                            <><SlidersHorizontal size={16} /><span>Filter Results</span></> :
-                            <><ChevronUp size={16} />Hide Filters</>
-                        }
-                    </button>
+                    <div className='RecipeFilter_bottom'>
+                        <div className="RecipeFilter_title">
+                            <h1>{title}</h1>
+                        </div>
+                        <button 
+                            className="RecipeFilter_visibilityToggle"
+                            onClick={() => setFilterHidden(!filterHidden)}
+                        >
+                            {filterHidden ? 
+                                <><SlidersHorizontal size={16} /><span>Filter Results</span></> :
+                                <><ChevronUp size={16} />Hide Filters</>
+                            }
+                        </button>
+                    </div>
                 </div>
-                
-                <div className="RecipeBrowser_title">
-                    <h1>{title}</h1>
-                </div>
-
                 <RecipeList 
                     filters={filters} 
                     refreshTrigger={refreshTrigger} 

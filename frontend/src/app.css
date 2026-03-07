@@ -528,7 +528,6 @@ input[type=number] {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  padding: var(--space-sm);
   border: none;
   color: var(--color-primary);
   font-weight: var(--weight-bold);
@@ -550,6 +549,15 @@ input[type=number] {
 }
 .RecipeFilter_heading {
   margin: 0;
+}
+.RecipeFilter_bottom {
+  display: flex;
+  align-items: center;
+
+}
+.RecipeFilter_title h1 {
+  margin: 0;
+  padding-block: var(--space-sm);
 }
 .RecipeFilter_buttonReset {
   box-shadow: var(--shadow-sm);
@@ -1313,32 +1321,60 @@ input[type=number] {
     display: inline-block;
 }
 
+.FolderPicker_trigger {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-secondary);
+  transition: all 0.2s ease;
+}
+.FolderPicker_trigger:hover {
+  color: var(--color-accent);
+}
+
 .FolderPicker_dropdown {
     position: absolute;
     top: 100%;
     right: 0;
     z-index: 100;
-    background: white;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    min-width: 180px;
-    padding: 8px;
-    margin-top: 4px;
-}
-
-.FolderPicker_dropdown button {
+    background: var(--color-primary);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg);
+    min-width: var(--space-xl);
+    padding: var(--space-sm);
+    margin-top: var(--space-xs);
     display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 8px;
-    text-align: left;
-    border-radius: 4px;
-    transition: background 0.2s;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+.FolderPicker_dropdownHeader {
+  display: flex;
+  justify-content: space-between;
+}
+.FolderPicker_dropdown h4 {
+  color: var(--color-bg);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  margin: 0;
+}
+.FolderPicker_dropdownList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.FolderPicker_dropdown button {
+  display: flex;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  color: var(--color-bg);
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .FolderPicker_dropdown button:hover {
-    background: var(--color-bg-hover);
+  color: var(--color-accent);
 }
 
 /* ---------- Star Rating ---------- */
