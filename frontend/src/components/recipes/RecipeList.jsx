@@ -42,7 +42,6 @@ function RecipeList({ filters, refreshTrigger, isPrivate }) {
     };
 
     fetchRecipes();
-    // Use joined strings for arrays to ensure the effect only fires when values actually change
   }, [
     debouncedSearch, 
     filters.spirits.join(','), 

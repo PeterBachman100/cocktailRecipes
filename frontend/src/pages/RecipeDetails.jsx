@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, useLocation, useOutletContext } from 'react-router-dom';
-import { ArrowLeft, X, CircleOff, Pencil, BookmarkPlus, BookmarkCheck, CloudAlert } from 'lucide-react';
+import { useParams, useNavigate, useLocation, useOutletContext, useSearchParams } from 'react-router-dom';
+import { X, CircleOff, Pencil, BookmarkPlus, BookmarkCheck, CloudAlert } from 'lucide-react';
 import { MoonLoader } from 'react-spinners';
 import api from '../api/axios.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -9,16 +9,19 @@ import Ingredient from '../components/recipes/Ingredient.jsx';
 import placeholderImage from '../assets/placeholder.png';
 import StarRating from '../components/utilities/StarRating.jsx';
 import FolderPicker from '../components/FolderPicker.jsx';
+import DeleteRecipe from '../components/recipes/DeleteRecipe.jsx';
 
 function RecipeDetails() {
   const { isAdmin } = useAuth();
-  const { isPrivate } = useOutletContext();
+  const { isPrivate, triggerRefresh } = useOutletContext();
   const canEdit = isPrivate || isAdmin;
 
   const { id } = useParams();
 
   const basePath = isPrivate ? '/my-recipes' : '/recipes';
   const { search } = useLocation();
+  const [searchParams] = useSearchParams();
+  const folderId = searchParams.get('folderId');
   const navigate = useNavigate();
 
   const [recipe, setRecipe] = useState(null);
@@ -117,7 +120,7 @@ function RecipeDetails() {
         <div className="RecipeDetails_intro">
             <div className='RecipeDetails_header'>
               <h1 className="RecipeDetails_title">{recipe.title}</h1>
-              <div>
+              <div className='RecipeDetails_actions'>
                 {isPrivate && <FolderPicker recipeId={recipe._id} />}
                 {canEdit && 
                   <button 
@@ -127,6 +130,7 @@ function RecipeDetails() {
                     <Pencil size={16} />
                   </button>
                 }
+                {isPrivate && <DeleteRecipe recipeId={id} folderId={folderId} triggerRefresh={triggerRefresh} />}
                 {!isPrivate && (
                   <button 
                     className={`RecipeDetails_saveButton RecipeDetails_saveButton--${saveStatus}`}
