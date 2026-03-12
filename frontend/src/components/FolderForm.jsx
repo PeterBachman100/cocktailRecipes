@@ -1,26 +1,43 @@
 import { useState } from "react";
-import { useFolders } from "../context/FolderContext";
 import { Plus, Check, X } from "lucide-react";
 
-const FolderForm = () => {
-    const [isEditing, setIsEditing] = useState(false);
-    const [name, setName] = useState("");
-    const { createFolder } = useFolders();
+const FolderForm = ({ initialName = "", onComplete, isInline = false }) => {
+    // If isInline is true, we start in editing mode immediately
+    const [isEditing, setIsEditing] = useState(isInline);
+    const [name, setName] = useState(initialName);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!name.trim()) return;
+        const trimmedName = name.trim();
+        
+        if (!trimmedName) return;
 
         try {
-            await createFolder(name.trim());
-            setName("");
-            setIsEditing(false);
+            // parent component (RecipeBrowser or FolderItem) handles the specific API call
+            await onComplete(trimmedName);
+            
+            // Clean up if this is the "Create New" version
+            if (!isInline) {
+                setName("");
+                setIsEditing(false);
+            }
         } catch (err) {
             alert(err);
         }
     };
 
-    if (!isEditing) {
+    const handleCancel = () => {
+        if (isInline) {
+            // Signal to parent to close the rename state without saving
+            onComplete(null); 
+        } else {
+            setIsEditing(false);
+            setName("");
+        }
+    };
+
+    // "Create New" button view
+    if (!isEditing && !isInline) {
         return (
             <button 
                 className="FolderForm_addFolderButton" 
@@ -41,6 +58,8 @@ const FolderForm = () => {
                 maxLength={30}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Folder name..."
+                // Ensures the cursor goes to the end of the text when renaming
+                onFocus={(e) => e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)}
             />
             <div className="FolderForm_actions">
                 <button type="submit" className="FolderForm_submit">
@@ -49,7 +68,7 @@ const FolderForm = () => {
                 <button 
                     type="button" 
                     className="FolderForm_cancel" 
-                    onClick={() => { setIsEditing(false); setName(""); }}
+                    onClick={handleCancel}
                 >
                     <X size={20} />
                 </button>

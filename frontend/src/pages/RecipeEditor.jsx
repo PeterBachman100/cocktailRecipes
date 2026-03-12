@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import { useNavigate, useParams, useLocation, useOutletContext } from 'react-router-dom';
-import { Plus, Trash2, Upload, ArrowLeft } from 'lucide-react';
+import { Plus, Trash2, Upload, ArrowLeft, X } from 'lucide-react';
 import CheckboxGroup from '../components/utilities/CheckboxGroup';
 import StarRating from '../components/utilities/StarRating';
 
@@ -57,7 +57,7 @@ const getValidationErrors = (recipe, imageFile, isEditMode) => {
 const RecipeEditor = () => {
     const navigate = useNavigate();
     const context = useOutletContext();
-    const isPersonal = context?.isPersonal ?? false; 
+    const isPrivate = context?.isPrivate ?? false; 
     const triggerRefresh = context?.triggerRefresh ?? (() => {});
     const { id } = useParams();
     const { search } = useLocation();
@@ -68,8 +68,8 @@ const RecipeEditor = () => {
     const [recipe, setRecipe] = useState(getInitialState());
     const [errors, setErrors] = useState({});
 
-    const basePath = isPersonal ? '/my-recipes' : '/recipes';
-    const baseEndpoint = isPersonal ? '/api/private-recipes' : '/api/public-recipes'
+    const basePath = isPrivate ? '/my-recipes' : '/recipes';
+    const baseEndpoint = isPrivate ? '/api/private-recipes' : '/api/public-recipes'
 
     const handleBack = () => {
         const destination = isEditMode ? `${basePath}/${id}${search}` : `${basePath}${search}`;
@@ -198,8 +198,8 @@ const RecipeEditor = () => {
            className="RecipeEditor_backButton" 
            onClick={handleBack}
             >
-            <ArrowLeft size={20} />
-            <span>Back to Library</span>
+            <X size={20} />
+            <span>Close</span>
             </button>
         </header>
         <form onSubmit={handleSubmit}>
@@ -207,7 +207,7 @@ const RecipeEditor = () => {
 
                 <div className="RecipeEditor_intro">
                     
-                    {isPersonal ? (
+                    {isPrivate ? (
                         <div className='RecipeEditor_rating'>
                             <label className="RecipeEditor_inputLabel">Rating</label>
                             <StarRating 

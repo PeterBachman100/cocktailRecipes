@@ -1,29 +1,32 @@
 import { X } from "lucide-react";
 import { useFolders } from "../context/FolderContext";
 import FolderForm from "./FolderForm";
-import { NavLink } from "react-router-dom";
+import FolderItem from "./FolderItem";
 
-function FolderList({foldersVisible, handleFoldersVisible}) {
-
-    const { folders } = useFolders();
+function FolderList({ foldersVisible, handleFoldersVisible }) {
+    // Destructure createFolder so we can pass it to the form
+    const { folders, createFolder } = useFolders();
 
     return (
         <div className={`FolderList_root ${foldersVisible ? 'visible' : ''}`}>
             <div className="FolderList_header">
                 <h2 className="FolderList_title">Folders</h2>
-                <button onClick={handleFoldersVisible} className="FolderList_close"><X size={24} /></button>
+                <button onClick={handleFoldersVisible} className="FolderList_close">
+                    <X size={24} />
+                </button>
             </div>
-            <FolderForm />
+
+            {/* Pass the creation logic into the form */}
+            <FolderForm onComplete={createFolder} />
+
             <div className="FolderList_list">
                 {folders.map((folder) => (
-                    <NavLink 
-                        className='FolderList_folder' 
-                        key={folder._id}
-                        to={`/my-recipes?folderId=${folder._id}`}
-                        onClick={handleFoldersVisible}
-                    >
-                        {folder.name}
-                    </NavLink>
+                    <FolderItem 
+                        key={folder._id} 
+                        folderId={folder._id} 
+                        folderName={folder.name} 
+                        handleFoldersVisible={handleFoldersVisible} 
+                    />
                 ))}
             </div>
         </div>

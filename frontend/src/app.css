@@ -551,13 +551,25 @@ input[type=number] {
   margin: 0;
 }
 .RecipeFilter_bottom {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--space-md);
+  align-items: center;
+  padding: var(--space-sm);
+
+}
+.RecipeFilter_title {
   display: flex;
   align-items: center;
-
+  gap: var(--space-sm);
+  position: relative; 
 }
 .RecipeFilter_title h1 {
   margin: 0;
-  padding-block: var(--space-sm);
+  padding: 0;
+  font-size: var(--text-xl);
+  color: var(--color-accent);
 }
 .RecipeFilter_buttonReset {
   box-shadow: var(--shadow-sm);
@@ -644,6 +656,72 @@ input[type=number] {
 .RecipeFilter_checkbox:has(input:checked) {
   background: var(--color-primary);
   color: var(--color-bg);
+}
+
+
+/* --------- FolderMenu (near title) ----------- */
+.FolderMenu_trigger {
+  background: none;
+  border: none;
+  color: var(--color-secondary);
+  padding: var(--space-xs);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: var(--radius-xs);
+}
+
+.FolderMenu_trigger:hover {
+  color: var(--color-accent);
+  background-color: rgba(var(--color-shadow-tint), 0.05);
+}
+
+/* The Popup Menu */
+.FolderMenu_popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 110;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  min-width: 160px;
+  padding: var(--space-xs);
+  margin-top: var(--space-xs);
+  animation: fadeIn 0.2s ease forwards;
+}
+
+.FolderMenu_popup button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: none;
+  border: none;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--color-text-main);
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-xs);
+  transition: all 0.2s ease;
+}
+
+.FolderMenu_popup button:hover {
+  background-color: var(--color-bg);
+  color: var(--color-primary);
+}
+
+.FolderMenu_popup button.delete {
+  color: var(--color-error);
+}
+
+.FolderMenu_popup button.delete:hover {
+  background-color: #fff1f2; /* Light error tint */
 }
 
 
@@ -1253,9 +1331,25 @@ input[type=number] {
   flex-direction: column;
   gap: var(--space-md);
 }
-.FolderList_folder {
-  font-size: var(--text-base);
+
+
+
+
+
+/* ------------ FolderItem ---------- */
+.FolderItem_root {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.FolderItem_title {
   font-weight: var(--weight-bold);
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.FolderItem_title:hover {
+  color: var(--color-accent);
 }
 
 
@@ -1347,7 +1441,7 @@ input[type=number] {
     background: var(--color-primary);
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-lg);
-    min-width: var(--space-xl);
+    min-width: 250px;
     padding: var(--space-sm);
     margin-top: var(--space-xs);
     display: flex;
@@ -1471,4 +1565,87 @@ input[type=number] {
 /* ---------- Star Rating ---------- */
 .StarRating_container.is-editable .StarRating_stars {
   cursor: pointer;
+}
+
+
+
+
+
+/* ---------- Delete Confirmation Modal ---------- */
+
+.Modal_overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(var(--color-shadow-tint), 0.5);
+  backdrop-filter: blur(2px);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.Modal_content {
+  background: var(--color-surface);
+  padding: var(--space-xl);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.Modal_content h2 {
+  margin: 0;
+  font-family: var(--font-display);
+}
+
+.Modal_content p {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--lh-base);
+  margin: 0;
+}
+
+.Modal_actions {
+  display: flex;
+  gap: var(--space-md);
+  width: 100%;
+  margin-top: var(--space-sm);
+}
+
+.Modal_actions button {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-pill);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Primary Delete Button */
+.Modal_actions button:first-child {
+  background-color: var(--color-error);
+  color: white;
+  border: none;
+}
+
+.Modal_actions button:first-child:hover {
+  filter: brightness(0.9);
+  box-shadow: var(--shadow-md);
+}
+
+/* Cancel Button */
+.Modal_actions button:last-child {
+  background-color: transparent;
+  color: var(--color-text-main);
+  border: 1px solid var(--color-border);
+}
+
+.Modal_actions button:last-child:hover {
+  background-color: var(--color-bg);
+  border-color: var(--color-primary);
 }
