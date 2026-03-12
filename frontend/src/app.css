@@ -185,18 +185,16 @@ input[type=number] {
   align-items: center;
 }
 
-.Navbar_actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-}
-
 .Navbar_link {
   background: none;
   border: none;
   color: var(--color-surface);
   transition: color 0.2s;
   cursor: pointer;
+  font-size: var(--text-base);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
 }
 .Navbar_link:hover {
   color: var(--color-accent);
@@ -207,6 +205,49 @@ input[type=number] {
   font-weight: var(--weight-bold);
   letter-spacing: 0.05em;
 }
+
+
+
+
+/* ---------- AppNavbar ---------- */
+
+.AppNavbar_root {
+  width: 100%;
+  background-color: var(--color-primary);
+  color: var(--color-border);
+  display: flex;
+  justify-content: center;
+  gap: var(--space-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+  padding: var(--space-sm) var(--space-md);
+}
+
+.AppNavbar_container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.AppNavbar_link {
+  background: none;
+  border: none;
+  color: var(--color-surface);
+  transition: color 0.2s;
+  cursor: pointer;
+  font-size: var(--text-base);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.AppNavbar_link:hover {
+  color: var(--color-accent);
+}
+.AppNavbar_link--active {
+  color: var(--color-accent);
+}
+
 
 
 
@@ -834,13 +875,14 @@ input[type=number] {
   color: var(--color-secondary);
   transition: all 0.2s ease;
   display: flex;
-  gap: var(--space-md);
+  gap: var(--space-xs);
   align-items: center;
 }
-
 .RecipeDetails_saveButton:hover {
   color: var(--color-accent);
 }
+.RecipeDetails_saveButton--loading
+
 .RecipeDetails_rating {
   margin-left: var(--space-md);
 }

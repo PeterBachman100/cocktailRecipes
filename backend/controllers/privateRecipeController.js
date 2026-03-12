@@ -68,9 +68,26 @@ const createPrivateRecipe = async (req, res) => {
 
 const copyPublicRecipe = async (req, res) => {
     try {
-        const source = await PublicRecipe.findById(req.params.publicId);
+        const { publicId } = req.params;
+
+        // 1. Check if the user already has this public recipe saved
+        const alreadySaved = await PrivateRecipe.findOne({ 
+            user: req.user.id, 
+            sourceId: publicId 
+        });
+
+        if (alreadySaved) {
+            return res.status(400).json({ 
+                message: 'Recipe already saved',
+                recipeId: alreadySaved._id 
+            });
+        }
+
+        // 2. Fetch the source
+        const source = await PublicRecipe.findById(publicId);
         if (!source) return res.status(404).json({ message: 'Source not found' });
 
+        // 3. Clone the image
         let clonedImage = source.image;
         let clonedId = source.cloudinaryId;
 
@@ -82,10 +99,19 @@ const copyPublicRecipe = async (req, res) => {
             clonedId = uploadRes.public_id;
         }
 
+        // 4. Prepare the data
+        const sourceObj = source.toObject();
+        
+        // Remove fields that should not be inherited from the public version
+        delete sourceObj._id;
+        delete sourceObj.createdAt;
+        delete sourceObj.updatedAt;
+
         const copyData = {
-            ...source.toObject(),
+            ...sourceObj,
             _id: new mongoose.Types.ObjectId(),
             user: req.user.id,
+            sourceId: source._id, // Link to the original
             image: clonedImage,
             cloudinaryId: clonedId,
         };
@@ -168,11 +194,28 @@ const deletePrivateRecipe = async (req, res) => {
     }
 };
 
+const checkSavedStatus = async (req, res) => {
+    try {
+        const saved = await PrivateRecipe.findOne({ 
+            user: req.user.id, 
+            sourceId: req.params.publicId 
+        });
+        
+        res.json({ 
+            isSaved: !!saved, 
+            privateId: saved ? saved._id : null 
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     getPrivateRecipes,
     createPrivateRecipe,
     copyPublicRecipe,
     getPrivateRecipeById,
     updatePrivateRecipeById,
-    deletePrivateRecipe
+    deletePrivateRecipe,
+    checkSavedStatus
 };

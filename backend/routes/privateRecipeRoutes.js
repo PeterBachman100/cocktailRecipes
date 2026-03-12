@@ -8,7 +8,8 @@ const {
     getPrivateRecipes,
     getPrivateRecipeById,
     updatePrivateRecipeById,
-    deletePrivateRecipe
+    deletePrivateRecipe,
+    checkSavedStatus
 } = require('../controllers/privateRecipeController');
 
 router.use(protect);
@@ -18,6 +19,8 @@ router.route('/')
     .post(upload.single('image'), createPrivateRecipe);
 
 router.post('/copy/:publicId', copyPublicRecipe);
+
+router.get('/check-saved/:publicId', checkSavedStatus);
 
 router.route('/:id')
     .get(getPrivateRecipeById)

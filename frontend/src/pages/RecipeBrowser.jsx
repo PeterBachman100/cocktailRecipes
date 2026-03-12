@@ -57,7 +57,7 @@ const RecipeBrowser = () => {
             );
         }
 
-        const titleText = isFolderPage ? getFolderName(folderId) : (isPrivate ? 'Saved Recipes' : 'The Library');
+        const titleText = isFolderPage ? getFolderName(folderId) :  '';
 
         return (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

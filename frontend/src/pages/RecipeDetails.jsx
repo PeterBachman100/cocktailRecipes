@@ -12,7 +12,7 @@ import FolderPicker from '../components/FolderPicker.jsx';
 import DeleteRecipe from '../components/recipes/DeleteRecipe.jsx';
 
 function RecipeDetails() {
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
   const { isPrivate, triggerRefresh } = useOutletContext();
   const canEdit = isPrivate || isAdmin;
 
@@ -27,6 +27,7 @@ function RecipeDetails() {
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus]= useState('idle'); //idle, loading, success, failure
+  const [savedPrivateId, setSavedPrivateId] = useState(null);
 
   const handleClose = () => {
     navigate(`${basePath}${search}`);
@@ -36,9 +37,9 @@ function RecipeDetails() {
     setSaveStatus('loading');
     
     try {
-        await api.post(`/api/private-recipes/copy/${id}`);
+        const response = await api.post(`/api/private-recipes/copy/${id}`);
         setSaveStatus('success');
-        setTimeout(() => setSaveStatus('idle'), 3000);
+        setSavedPrivateId(response.data._id);
     } catch (err) {
         console.error("Save failed", err);
         setSaveStatus('error');
@@ -51,8 +52,17 @@ function RecipeDetails() {
       try {
         const endpoint = isPrivate ? `/api/private-recipes/${id}` : `/api/public-recipes/${id}`
         setLoading(true);
+        setSaveStatus('idle');
+        setSavedPrivateId(null);
         const response = await api.get(endpoint);
         setRecipe(response.data);
+
+        if (!isPrivate && user) {
+          const checkRes = await api.get(`/api/private-recipes/check-saved/${id}`);
+          if (checkRes.data.isSaved) {
+            setSavedPrivateId(checkRes.data.privateId);
+          }
+        }
       } catch (error) {
         console.error("Error fetching recipe:", error);
       } finally {
@@ -132,17 +142,49 @@ function RecipeDetails() {
                 }
                 {isPrivate && <DeleteRecipe recipeId={id} folderId={folderId} triggerRefresh={triggerRefresh} />}
                 {!isPrivate && (
+                savedPrivateId ? (
+                  <button 
+                    className="RecipeDetails_saveButton RecipeDetails_saveButton--saved"
+                    onClick={() => navigate(`/my-recipes/${savedPrivateId}`)}
+                  >
+                    <BookmarkCheck size={16} color={'var(--color-accent)'}/>
+                    <span>View in My Recipes</span>
+                  </button>
+                ) : (
                   <button 
                     className={`RecipeDetails_saveButton RecipeDetails_saveButton--${saveStatus}`}
                     onClick={handleSaveToLibrary}
                     disabled={saveStatus !== 'idle'}
                   >
-                    {saveStatus === 'idle' && <BookmarkPlus size={16} />}
-                    {saveStatus === 'loading' && <MoonLoader size="16px" />}
-                    {saveStatus === 'success' && <BookmarkCheck size={16} color={'var(--color-accent)'}/>}
-                    {saveStatus === 'error' && <><CloudAlert size={16} color={'var(--color-error'} /><span> Error saving, please try again.</span></> }
+                    {saveStatus === 'idle' && (
+                      <>
+                        <BookmarkPlus size={16} /> 
+                        <span>Save</span>
+                      </>
+                    )}
+
+                    {saveStatus === 'loading' && (
+                      <div className={`RecipeDetails_saveButton RecipeDetails_saveButton--${saveStatus}`}>
+                        <MoonLoader size='20px' loading='true' speedMultiplier='0.5' color={'var(--color-primary)'} />
+                      </div>
+                    )}
+
+                    {saveStatus === 'success' && (
+                      <>
+                        <BookmarkCheck size={16} color={'var(--color-accent)'}/>
+                        <span>Saved!</span>
+                      </>
+                    )}
+
+                    {saveStatus === 'error' && (
+                      <>
+                        <CloudAlert size={16} color={'var(--color-error)'} />
+                        <span>Error</span>
+                      </>
+                    )}
                   </button>
-                )}
+                )
+              )}
                   
               </div>
             </div>

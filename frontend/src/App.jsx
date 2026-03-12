@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import RecipeEditor from './pages/RecipeEditor'; 
 import Navbar from './components/Navbar';
+import AppNavbar from './components/AppNavbar';
 import './app.css';
 import FolderList from './components/FolderList';
 
@@ -24,7 +25,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className='App_wrapper'>
-        <Navbar handleFoldersVisible={handleFoldersVisible} />
+        <Navbar />
         <main className='App_content'>
           <FolderList foldersVisible={foldersVisible} handleFoldersVisible={handleFoldersVisible} />
           <Routes>
@@ -64,6 +65,7 @@ function App() {
 
           </Routes>
         </main>
+        <AppNavbar handleFoldersVisible={handleFoldersVisible} />
       </div>
     </BrowserRouter>
   );

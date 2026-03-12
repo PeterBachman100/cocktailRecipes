@@ -22,7 +22,7 @@ const Login = () => {
   return (
     <div className="Login_root">
       <form className="Login_form" onSubmit={handleSubmit}>
-        <h2 className="Login_title">Admin Login</h2>
+        <h2 className="Login_title">Login</h2>
         {error && <p className="Login_error">{error}</p>}
         
         <div className="Login_field">
@@ -43,7 +43,7 @@ const Login = () => {
           />
         </div>
 
-        <button type="submit" className="Login_button">Enter Library</button>
+        <button type="submit" className="Login_button">Login</button>
       </form>
     </div>
   );
