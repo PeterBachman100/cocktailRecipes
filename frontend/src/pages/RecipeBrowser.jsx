@@ -102,7 +102,6 @@ const RecipeBrowser = () => {
         );
     };
 
-    // Rest of your existing logic (updateField, toggleArrayItem, resetFilters, etc.)
     const updateField = (name, value) => {
         const newParams = new URLSearchParams(searchParams);
         if (value) newParams.set(name, value);
@@ -171,6 +170,7 @@ const RecipeBrowser = () => {
                 </div>
                 <RecipeList 
                     filters={filters} 
+                    resetFilters={resetFilters}
                     refreshTrigger={refreshTrigger} 
                     isRefreshing={isPending} 
                     isPrivate={isPrivate} 

@@ -3,8 +3,9 @@ import api from '../../api/axios.js';
 import RecipeCard from './RecipeCard.jsx';
 import useDebounce from '../../hooks/useDebounce';
 import { MoonLoader } from 'react-spinners';
+import { RotateCcw } from 'lucide-react';
 
-function RecipeList({ filters, refreshTrigger, isPrivate }) {
+function RecipeList({ filters, resetFilters, refreshTrigger, isPrivate }) {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,7 +18,6 @@ function RecipeList({ filters, refreshTrigger, isPrivate }) {
       try {
         const endpoint = isPrivate ? '/api/private-recipes' : '/api/public-recipes';
 
-        // Axios handles object-to-query-string conversion automatically
         const params = {
           search: debouncedSearch,
           spirits: filters.spirits.join(','),
@@ -27,7 +27,6 @@ function RecipeList({ filters, refreshTrigger, isPrivate }) {
           flavorsMatch: filters.flavorsMatch,
         };
 
-        // Only add folderId if we are in the personal collection and it exists
         if (isPrivate && filters.folderId) {
           params.folderId = filters.folderId;
         }
@@ -54,6 +53,16 @@ function RecipeList({ filters, refreshTrigger, isPrivate }) {
     isPrivate
   ]);
 
+  const hasActiveFilters = 
+    filters.search.trim() !== '' || 
+    filters.spirits.length > 0 || 
+    filters.flavors.length > 0 || 
+    filters.cocktailType.length > 0;
+
+  const emptyMessage = hasActiveFilters 
+    ? "No recipes found matching those filters." 
+    : "Your collection is empty. Start adding some recipes!";
+
   if (loading) return (
     <div className='RecipeList_loadingWrapper'>
         <div className='RecipeList_loading'>
@@ -63,23 +72,34 @@ function RecipeList({ filters, refreshTrigger, isPrivate }) {
     </div>
   );
 
-  return (
-    <div className="RecipeList_root">
-      {recipes.length > 0 ? (
-        recipes.map(recipe => (
-          <RecipeCard 
-            key={recipe._id} 
-            recipe={recipe} 
-            isPrivate={isPrivate} 
-          />
-        ))
-      ) : (
-        <div className="RecipeList_empty">
-          <p>No recipes found matching those filters.</p>
+  if (recipes.length > 0) {
+    return (
+        <div className="RecipeList_root">
+            {recipes.map(recipe => (
+                <RecipeCard 
+                    key={recipe._id} 
+                    recipe={recipe} 
+                    isPrivate={isPrivate} 
+                />
+            ))}
         </div>
-      )}
+    );
+  } 
+
+  return (
+    <div className="RecipeList_empty">
+      <div className='RecipeList_emptyMain'>
+        <h2>{emptyMessage}</h2>
+        {hasActiveFilters && (
+            <button onClick={resetFilters} className='RecipeList_resetFilters'>
+                <RotateCcw size={20} />
+                Reset Filters
+            </button>
+        )}
+      </div>
     </div>
   );
+
 }
 
 export default RecipeList;

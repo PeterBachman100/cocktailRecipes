@@ -385,6 +385,35 @@ input[type=number] {
   display: grid;
   place-items: center;
 }
+.RecipeList_empty {
+  display: grid;
+  place-items: center;
+  min-height: 20vh;
+}
+.RecipeList_emptyMain {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  align-items: center;
+}
+.RecipeList_resetFilters {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  font-size: var(--text-md);
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.RecipeList_resetFilters:hover {
+  box-shadow: none;
+  background-color: var(--color-accent);
+}
 
 
 
