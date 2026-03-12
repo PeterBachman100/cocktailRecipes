@@ -20,7 +20,7 @@ const getInitialState = () => ({
   cocktailType: '',
   ingredients: [{ name: '', amount: '', unit: 'oz' }],
   steps: [{ instruction: '', tip: '' }],
-  notes: '',
+  notes: [''],
   image: '',
   cloudinaryId: '',
   rating: 0
@@ -75,6 +75,15 @@ const RecipeEditor = () => {
         const destination = isEditMode ? `${basePath}/${id}${search}` : `${basePath}${search}`;
         navigate(destination);
     }
+
+    const handleNoteChange = (index, value) => {
+    const updatedNotes = [...recipe.notes];
+        updatedNotes[index] = value;
+        setRecipe({ ...recipe, notes: updatedNotes });
+    };
+
+    const addNote = () => setRecipe({ ...recipe, notes: [...recipe.notes, ''] });
+    const removeNote = (index) => setRecipe({ ...recipe, notes: recipe.notes.filter((_, i) => i !== index) });
 
     useEffect(() => {
         if (isEditMode && id) {
@@ -153,16 +162,17 @@ const RecipeEditor = () => {
         formData.append('rating', recipe.rating);
         formData.append('title', recipe.title);
         formData.append('description', recipe.description);
-        formData.append('notes', recipe.notes);
         formData.append('cocktailType', recipe.cocktailType);
         
         const finalIngs = recipe.ingredients.filter(ing => ing.name.trim() !== '');
         const finalSteps = recipe.steps.filter(step => step.instruction.trim() !== '');
+        const finalNotes = recipe.notes.filter(note => note.trim() !== '');
         
         formData.append('ingredients', JSON.stringify(finalIngs));
         formData.append('steps', JSON.stringify(finalSteps));
         formData.append('spirits', JSON.stringify(recipe.spirits));
         formData.append('flavors', JSON.stringify(recipe.flavors));
+        formData.append('notes', JSON.stringify(finalNotes));
         
         if (imageFile) formData.append('image', imageFile);
 
@@ -347,14 +357,23 @@ const RecipeEditor = () => {
                             </button>
                         </div>
                     </div>
-                    <div>
-                        <label htmlFor="notes" className="RecipeEditor_inputLabel">Notes</label>
-                        <textarea 
-                            value={recipe.notes}
-                            className="RecipeEditor_notes" id="notes"
-                            placeholder="Any additional notes or variations..."
-                            onChange={e => setRecipe({...recipe, notes: e.target.value})}
-                        />
+                   <div>
+                        <span className="RecipeEditor_inputLabel">Notes</span>
+                        <div className='RecipeEditor_notes'>
+                            {recipe.notes.map((note, idx) => (
+                                <div key={idx} className="RecipeEditor_noteRow">
+                                    <textarea 
+                                        value={note}
+                                        className="RecipeEditor_notes"
+                                        onChange={e => handleNoteChange(idx, e.target.value)}
+                                    />
+                                    <button type="button" className="RecipeEditor_iconBtn--delete" onClick={() => removeNote(idx)}><Trash2 size={12}/></button>
+                                </div>
+                            ))}
+                            <button type="button" onClick={addNote} className="RecipeEditor_addBtn">
+                                <Plus size={16} /> Add Paragraph
+                            </button>
+                        </div>
                     </div>
                 </div>
 

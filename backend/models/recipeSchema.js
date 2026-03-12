@@ -24,7 +24,10 @@ const recipe = {
   description: { type: String },
   ingredients: [IngredientSchema],
   steps: [StepSchema],
-  notes: { type: String },
+  notes: {
+    type: [String],
+    default: []
+  },
   spirits: [{ type: String, enum: ENUMS.spirits }],
   cocktailType: { type: String, enum: ENUMS.cocktailType },
   flavors: [{ type: String, enum: ENUMS.flavors }],

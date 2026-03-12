@@ -27,7 +27,8 @@ const getPrivateRecipes = async (req,res) => {
                 { title: { $regex: search, $options: 'i' } },
                 { description: { $regex: search, $options: 'i' } },
                 { spirits: { $regex: search, $options: 'i' } },
-                { "ingredients.name": { $regex: search, $options: 'i' } }
+                { "ingredients.name": { $regex: search, $options: 'i' } },
+                { notes: { $regex: search, $options: 'i' } }
             ];
         }
 
@@ -47,7 +48,7 @@ const getPrivateRecipes = async (req,res) => {
 const createPrivateRecipe = async (req, res) => {
     try {
         const recipeData = { ...req.body };
-        const jsonFields = ['ingredients', 'steps', 'spirits', 'flavors', 'seasons'];
+        const jsonFields = ['ingredients', 'steps', 'spirits', 'flavors', 'seasons', 'notes'];
         parseJsonFields(recipeData, jsonFields);
 
         recipeData.user = req.user.id; 
@@ -118,7 +119,7 @@ const updatePrivateRecipeById = async (req, res) => {
         }
 
         const updateData = { ...req.body };
-        const jsonFields = ['ingredients', 'steps', 'spirits', 'flavors', 'seasons'];
+        const jsonFields = ['ingredients', 'steps', 'spirits', 'flavors', 'seasons', 'notes'];
         parseJsonFields(updateData, jsonFields);
 
         if (req.file) {

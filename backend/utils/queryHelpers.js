@@ -4,13 +4,18 @@ const applyArrayFilter = (query, field, value, matchType) => {
     query[field] = (matchType === 'all') ? { $all: vals } : { $in: vals };
 }
 
+// utils/queryHelpers.js
 const parseJsonFields = (data, fields) => {
     fields.forEach(field => {
+        // Only process if it's a string. If it's already an array, leave it!
         if (data[field] && typeof data[field] === 'string') {
             try {
-                data[field] = JSON.parse(data[field]);
+                const parsed = JSON.parse(data[field]);
+                // Force it to be a real JS array
+                data[field] = Array.isArray(parsed) ? parsed : [parsed];
             } catch (error) {
-                console.error(`Error parsing field ${field}: `, error);
+                // If it's just a plain string "Hello", wrap it: ["Hello"]
+                data[field] = [data[field]];
             }
         }
     });

@@ -1,24 +1,12 @@
 const PublicRecipe = require('../models/PublicRecipe');
-const { applyArrayFilter, SPIRIT_GROUPS } = require('../utils/queryHelpers');
+const { applyArrayFilter, SPIRIT_GROUPS, parseJsonFields } = require('../utils/queryHelpers');
 const { cloudinary } = require('../config/cloudinary');
-
-const parseJsonFields = (data, fields) => {
-    fields.forEach(field => {
-        if (data[field] && typeof data[field] === 'string') {
-            try {
-                data[field] = JSON.parse(data[field]);
-            } catch(error) {
-
-            }
-        }
-    });
-};
 
 // @desc Create public recipe
 const createPublicRecipe = async (req, res) => {
     try {
         const recipeData = { ...req.body };
-        const jsonFields = ['ingredients', 'steps', 'spirits', 'flavors'];
+        const jsonFields = ['ingredients', 'steps', 'spirits', 'flavors', 'notes'];
         parseJsonFields(recipeData, jsonFields);
 
         if (req.file) {
@@ -49,7 +37,8 @@ const getPublicRecipes = async (req, res) => {
         if(search) query.$or = [
             { title: { $regex: search, $options: 'i' } },
             { description: { $regex: search, $options: 'i' } },
-            { "ingredients.name": { $regex: search, $options: 'i' } }
+            { "ingredients.name": { $regex: search, $options: 'i' } },
+            { notes: { $regex: search, $options: 'i' } }
         ];
         if(cocktailType) {
             const types = cocktailType.split(',').map(t => t.trim().toLowerCase());
@@ -113,7 +102,7 @@ const updatePublicRecipe = async (req, res) => {
 
         const updateData = { ...req.body };
 
-        const jsonFields = ['ingredients', 'steps', 'spirits', 'flavors'];
+        const jsonFields = ['ingredients', 'steps', 'spirits', 'flavors', 'notes'];
         parseJsonFields(updateData, jsonFields);
 
         if (req.file) {

@@ -171,7 +171,15 @@ function RecipeDetails() {
                 ))}
             </ol>
             <div className='RecipeDetails_notes'>
-              <p>{recipe.notes}</p>
+              {recipe.notes && recipe.notes.length > 0 ? (
+                recipe.notes.map((note, index) => (
+                    <p key={index} className="RecipeDetails_note">
+                        {note}
+                    </p>
+                ))
+            ) : (
+                ''
+            )}
             </div>
         </div>
 

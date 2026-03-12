@@ -20,7 +20,7 @@ const Navbar = ({handleFoldersVisible}) => {
                 {user ? (
                     <>
                         {isAdmin && (
-                            <Link to='/new' className='Navbar_link'>
+                            <Link to='/recipes/new' className='Navbar_link'>
                                 <CirclePlus size={16} />
                             </Link>
                         )}
