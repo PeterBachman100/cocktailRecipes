@@ -877,6 +877,7 @@ input[type=number] {
   display: flex;
   gap: var(--space-xs);
   align-items: center;
+  min-width: 80px;
 }
 .RecipeDetails_saveButton:hover {
   color: var(--color-accent);

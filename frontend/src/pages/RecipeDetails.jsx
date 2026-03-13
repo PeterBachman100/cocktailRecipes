@@ -148,7 +148,7 @@ function RecipeDetails() {
                     onClick={() => navigate(`/my-recipes/${savedPrivateId}`)}
                   >
                     <BookmarkCheck size={16} color={'var(--color-accent)'}/>
-                    <span>View in My Recipes</span>
+                    <span>Saved</span>
                   </button>
                 ) : (
                   <button 
@@ -165,21 +165,22 @@ function RecipeDetails() {
 
                     {saveStatus === 'loading' && (
                       <div className={`RecipeDetails_saveButton RecipeDetails_saveButton--${saveStatus}`}>
-                        <MoonLoader size='20px' loading='true' speedMultiplier='0.5' color={'var(--color-primary)'} />
+                        <MoonLoader size='16px' loading='true' speedMultiplier='0.5' color={'var(--color-primary)'} />
+                        <span>Saving...</span>
                       </div>
                     )}
 
                     {saveStatus === 'success' && (
                       <>
                         <BookmarkCheck size={16} color={'var(--color-accent)'}/>
-                        <span>Saved!</span>
+                        <span>Saved</span>
                       </>
                     )}
 
                     {saveStatus === 'error' && (
                       <>
                         <CloudAlert size={16} color={'var(--color-error)'} />
-                        <span>Error</span>
+                        <span>Unable to save</span>
                       </>
                     )}
                   </button>
