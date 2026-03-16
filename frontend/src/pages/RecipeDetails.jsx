@@ -46,6 +46,11 @@ function RecipeDetails() {
     navigate(`${basePath}${search}`);
   }
 
+  const handleEdit = () => {
+    const destination = `${basePath}/${id}/edit?${searchParams}`;
+    navigate(destination);
+  }
+
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
@@ -134,7 +139,7 @@ function RecipeDetails() {
                 {canEdit && 
                   <button 
                     className='RecipeDetails_editButton' 
-                    onClick={() => navigate('edit')}
+                    onClick={handleEdit}
                   >
                     <Pencil size={16} />
                   </button>

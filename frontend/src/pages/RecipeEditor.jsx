@@ -72,7 +72,7 @@ const RecipeEditor = () => {
     const baseEndpoint = isPrivate ? '/api/private-recipes' : '/api/public-recipes'
 
     const handleBack = () => {
-        const destination = isEditMode ? `${basePath}/${id}${search}` : `${basePath}${search}`;
+        const destination = `${basePath}${search}`;
         navigate(destination);
     }
 
@@ -200,6 +200,7 @@ const RecipeEditor = () => {
             console.error(error);
         }
     }
+
 
     return (
       <article className="RecipeEditor_root">
