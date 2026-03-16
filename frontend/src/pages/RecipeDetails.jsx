@@ -17,10 +17,9 @@ function RecipeDetails() {
   const canEdit = isPrivate || isAdmin;
 
   const { id } = useParams();
-
-  const basePath = isPrivate ? '/my-recipes' : '/recipes';
-  const { search } = useLocation();
   const [searchParams] = useSearchParams();
+   const basePath = isPrivate ? '/my-recipes' : '/recipes';
+    const { search } = useLocation();
   const folderId = searchParams.get('folderId');
   const navigate = useNavigate();
 
@@ -28,10 +27,6 @@ function RecipeDetails() {
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus]= useState('idle'); //idle, loading, success, failure
   const [savedPrivateId, setSavedPrivateId] = useState(null);
-
-  const handleClose = () => {
-    navigate(`${basePath}${search}`);
-  }
  
   const handleSaveToLibrary = async () => {
     setSaveStatus('loading');
@@ -45,7 +40,11 @@ function RecipeDetails() {
         setSaveStatus('error');
         setTimeout(() => setSaveStatus('idle'), 3000);
     }
-};
+  };
+
+  const handleClose = () => {
+    navigate(`${basePath}${search}`);
+  }
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -73,7 +72,7 @@ function RecipeDetails() {
   }, [id]);
 
   if (loading) return (
-    <div className='RecipeDetails_root'>
+    <div className={`RecipeDetails_root`}>
       <header className="RecipeDetails_nav">
          <button 
            className="RecipeDetails_backButton" 
@@ -93,7 +92,7 @@ function RecipeDetails() {
   );
 
   if (!recipe) return (
-    <div className='RecipeDetails_root'>
+    <div className={`RecipeDetails_root`}>
       <header className="RecipeDetails_nav">
          <button 
            className="RecipeDetails_backButton" 
@@ -114,7 +113,7 @@ function RecipeDetails() {
   
 
   return (
-    <article className="RecipeDetails_root">
+    <article className={`RecipeDetails_root`}>
       <header className="RecipeDetails_nav">
         <button 
           className="RecipeDetails_backButton" 

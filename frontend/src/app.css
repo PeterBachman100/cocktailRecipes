@@ -220,7 +220,7 @@ input[type=number] {
   gap: var(--space-lg);
   box-shadow: var(--shadow-lg);
   z-index: 10;
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--space-md) var(--space-sm);
 }
 
 .AppNavbar_container {
@@ -240,6 +240,7 @@ input[type=number] {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
+  text-align: center;
 }
 .AppNavbar_link:hover {
   color: var(--color-accent);
@@ -247,20 +248,24 @@ input[type=number] {
 .AppNavbar_link--active {
   color: var(--color-accent);
 }
+@media (max-width: 600px) {
+  .AppNavbar_link {
+    flex-direction: column;
+  }
+}
 
 
 
 
-
-/* ---------- Login ---------- */
-.Login_root {
+/* ---------- Register ---------- */
+.Register_root {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
 
-.Login_form {
+.Register_form {
   background: var(--color-surface);
   padding: var(--space-xl);
   border-radius: 12px;
@@ -272,11 +277,11 @@ input[type=number] {
   align-items: center;
 }
 
-.Login_title {
+.Register_title {
   text-align: center;
 }
 
-.Login_field {
+.Register_field {
   display: grid;
   align-items: center;
   grid-template-columns: 1fr 2fr;
@@ -285,13 +290,87 @@ input[type=number] {
   font-weight: 200;
 }
 
-.Login_button {
+.Register_button {
   margin-top: var(--space-md);
   background-color: var(--color-primary);
   color: var(--color-bg);
   border-radius: var(--radius-pill);
   border: none;
   padding: var(--space-sm) var(--space-md);
+}
+
+
+
+
+
+
+
+
+
+/* ---------- Auth ---------- */
+.Auth_root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.Auth_form {
+  background: var(--color-surface);
+  padding: var(--space-xl);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.Auth_title {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+.Auth_error {
+  color: var(--color-error);
+  font-weight: var(--weight-bold);
+  margin-bottom: var(--space-md);
+  text-align: center;
+}
+.Auth_row {
+  margin-bottom: var(--space-md);
+}
+.Auth_field {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 3fr;
+  margin-bottom: var(--space-sm);
+}
+.Auth_label {
+  color: var(--color-text-muted);
+  font-weight: 200;
+}
+.Auth_input {
+  width: 100%;
+}
+.Auth_input.Auth_errorInput {
+  border-color: var(--color-error);
+}
+.Auth_errorMessage {
+  color: var(--color-error);
+  text-align: center;
+  display: block;
+}
+.Auth_button {
+  margin-block: var(--space-md);
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  border-radius: var(--radius-pill);
+  border: none;
+  padding: var(--space-sm) var(--space-md);
+}
+
+.Auth_tip {
+  text-align: center;
 }
 
 
@@ -1739,4 +1818,19 @@ input[type=number] {
 .Modal_actions button:last-child:hover {
   background-color: var(--color-bg);
   border-color: var(--color-primary);
+}
+
+
+
+
+
+
+.Link {
+  text-decoration: underline;
+  font-weight: var(--weight-bold);
+  color: var(--color-primary);
+  transition: all 0.2s ease;
+}
+.Link:hover {
+  color: var(--color-accent);
 }

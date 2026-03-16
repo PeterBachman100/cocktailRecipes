@@ -11,6 +11,7 @@ const RecipeBrowser = () => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
+    
     const folderId = searchParams.get('folderId') || '';
     const { id } = useParams();
 
@@ -128,8 +129,9 @@ const RecipeBrowser = () => {
         setSearchParams(newParams);
     };
 
-    const isSplitView = id || pathname.includes('/new') || pathname.includes('/edit');
+    let isSplitView = id || pathname.includes('/new') || pathname.includes('/edit')
     const isFullWidth = !isSplitView;
+
     const [filterHidden, setFilterHidden] = useState(true);
 
     const [refreshTrigger, setRefreshTrigger] = useState(0);

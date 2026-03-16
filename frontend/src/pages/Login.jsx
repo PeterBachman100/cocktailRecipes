@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -20,12 +20,12 @@ const Login = () => {
   };
 
   return (
-    <div className="Login_root">
-      <form className="Login_form" onSubmit={handleSubmit}>
-        <h2 className="Login_title">Login</h2>
-        {error && <p className="Login_error">{error}</p>}
+    <div className="Auth_root">
+      <form className="Auth_form" onSubmit={handleSubmit}>
+        <h2 className="Auth_title">Login</h2>
+        {error && <p className="Auth_error">{error}</p>}
         
-        <div className="Login_field">
+        <div className="Auth_field">
           <label>Username</label>
           <input 
             type="text" 
@@ -34,16 +34,20 @@ const Login = () => {
           />
         </div>
 
-        <div className="Login_field">
+        <div className="Auth_field">
           <label>Password</label>
           <input 
-            type="password" 
+            type="text" 
             required 
             onChange={(e) => setCredentials({...credentials, password: e.target.value})} 
           />
         </div>
 
-        <button type="submit" className="Login_button">Login</button>
+        <button type="submit" className="Auth_button">Login</button>
+
+        <div>
+          <p>Don't have an account? <Link className='Link' to={'/register'} >Register here</Link></p>
+        </div>
       </form>
     </div>
   );

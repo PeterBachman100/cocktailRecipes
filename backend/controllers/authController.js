@@ -7,30 +7,38 @@ const jwt = require('jsonwebtoken');
 // @access Public
 
 const registerUser = async (req, res) => {
-    const {username, password} = req.body;
+    const { username, password } = req.body;
 
     try {
-        const userExists = await User.findOne({username});
-
-        if (userExists) {
-            return res.status(400).json({message: 'User already exsts'});
-        }
-
         const user = await User.create({
             username,
             password
         });
 
-        if(user) {
+        if (user) {
             res.status(201).json({
-                _id: user._id,
-                username: user.username,
+                user: {
+                    _id: user._id,
+                    username: user.username,
+                    role: user.role, 
+                },
+                token: generateToken(user._id),
                 message: 'User registered successfully.'
             });
         }
-    } catch(error) {
+    } catch (error) {
+        if (error.name === 'ValidationError') {
+            const message = Object.values(error.errors).map(val => val.message);
+            return res.status(400).json({ message: message.join(', ') });
+        }
+
+        // Check for Duplicate Key Error (e.g., username already taken)
+        if (error.code === 11000) {
+            return res.status(400).json({ message: 'That username is already taken' });
+        }
+
         console.error(error);
-        res.status(500).json({message: 'Server error during registration', error: error.message});
+        res.status(500).json({ message: 'Server error during registration' });
     }
 };
 

@@ -25,24 +25,37 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-            const res = await api.post('/api/auth/login', { username, password });
-            const { token, user: userData } = res.data;
-            localStorage.setItem('token', token);
-            setUser(userData);
-            return userData;
-        } catch (error) {
-            throw error.response?.data?.message || 'Login failed';
-        }
-    };
+      const res = await api.post('/api/auth/login', { username, password });
+      const { token, user: userData } = res.data;
+      localStorage.setItem('token', token);
+      setUser(userData);
+      return userData;
+    } catch (error) {
+      throw error.response?.data?.message || 'Login failed';
+    }
+  };
 
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
   };
 
+  const register = async (username, password) => {
+    try {
+      const res = await api.post('/api/auth/register', { username, password });
+      const { token, user: userData } = res.data;
+      localStorage.setItem('token', token);
+      setUser(userData);
+      return userData;
+    } catch (error) {
+      throw error.response?.data?.message || 'Registration failed';
+    }
+  }
+
   return (
     <AuthContext.Provider value={{ 
       user, 
+      register,
       login, 
       logout, 
       loading, 

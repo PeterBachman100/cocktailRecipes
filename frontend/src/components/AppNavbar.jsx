@@ -43,8 +43,8 @@ const AppNavbar = ({ handleFoldersVisible }) => {
                 </button>
             )}
 
-            {user && isAdmin && (
-                <NavLink to='/recipes/new' className={({ isActive }) => isActive ? 'AppNavbar_link AppNavbar_link--active' : 'AppNavbar_link'}>
+            {user && (
+                <NavLink to={isAdmin ? '/recipes/new' : '/my-recipes/new'} className={({ isActive }) => isActive ? 'AppNavbar_link AppNavbar_link--active' : 'AppNavbar_link'}>
                     <CirclePlus size={20} />
                     <span>Add Recipe</span>
                 </NavLink>
