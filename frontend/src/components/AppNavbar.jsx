@@ -29,12 +29,10 @@ const AppNavbar = ({ handleFoldersVisible }) => {
                 <span>The Library</span>
             </NavLink>
             
-            {user && (
-                <NavLink to='/my-recipes' className={getMyRecipesClass} end>
-                    <BookMarked size={20} />
-                    <span>My Recipes</span>
-                </NavLink>
-            )}
+            <NavLink to='/my-recipes' className={getMyRecipesClass} end>
+                <BookMarked size={20} />
+                <span>My Recipes</span>
+            </NavLink>
 
             {user && (
                 <button className={folderBtnClass} onClick={handleFoldersVisible}>

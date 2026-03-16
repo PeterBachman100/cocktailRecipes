@@ -25,22 +25,26 @@ const Login = () => {
         <h2 className="Auth_title">Login</h2>
         {error && <p className="Auth_error">{error}</p>}
         
-        <div className="Auth_field">
-          <label>Username</label>
-          <input 
-            type="text" 
-            required 
-            onChange={(e) => setCredentials({...credentials, username: e.target.value})} 
-          />
+        <div className='Auth_row'>
+          <div className="Auth_field">
+            <label className='Auth_label'>Username</label>
+            <input 
+              type="text" 
+              required 
+              onChange={(e) => setCredentials({...credentials, username: e.target.value})} 
+            />
+          </div>
         </div>
 
-        <div className="Auth_field">
-          <label>Password</label>
-          <input 
-            type="text" 
-            required 
-            onChange={(e) => setCredentials({...credentials, password: e.target.value})} 
-          />
+        <div className='Auth_row'>
+          <div className="Auth_field">
+            <label className='Auth_label'>Password</label>
+            <input 
+              type="text" 
+              required 
+              onChange={(e) => setCredentials({...credentials, password: e.target.value})} 
+            />
+          </div>
         </div>
 
         <button type="submit" className="Auth_button">Login</button>

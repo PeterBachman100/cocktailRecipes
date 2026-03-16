@@ -367,6 +367,11 @@ input[type=number] {
   border-radius: var(--radius-pill);
   border: none;
   padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.Auth_button:hover {
+  background-color: var(--color-accent);
 }
 
 .Auth_tip {
