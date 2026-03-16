@@ -140,7 +140,7 @@ function RecipeDetails() {
                   </button>
                 }
                 {isPrivate && <DeleteRecipe recipeId={id} folderId={folderId} triggerRefresh={triggerRefresh} />}
-                {!isPrivate && (
+                {user && !isPrivate && (
                 savedPrivateId ? (
                   <button 
                     className="RecipeDetails_saveButton RecipeDetails_saveButton--saved"
