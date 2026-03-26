@@ -38,7 +38,7 @@ app.use(cors({
   credentials: true
 }));
 
-app.options('*', cors());
+app.options('/*splat', cors());
 
 if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
