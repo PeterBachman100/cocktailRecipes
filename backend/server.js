@@ -20,19 +20,25 @@ app.set('trust proxy', 1);
 app.use(express.json()); 
 
 const allowedOrigins = [
-'http://localhost:5173',
-process.env.FRONTEND_URL
-].filter(Boolean);
+  'http://localhost:5173',
+  'https://tippl.vercel.app'
+];
 
 app.use(cors({
   origin: function (origin, callback) {
-    console.log("Incoming Request Origin:", origin);
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error('Not allowed by CORS'));
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.error(`CORS Blocked: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
   },
   credentials: true
 }));
+
+app.options('*', cors());
 
 if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
