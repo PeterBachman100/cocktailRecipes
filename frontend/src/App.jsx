@@ -41,7 +41,7 @@ function App() {
                 <Route path=":id/edit" element={<RecipeEditor />} />
               </Route>
 
-              {/* View a public recipe (must be below 'new' so it doesn't match /recipes/new) */}
+              {/* View a public recipe */}
               <Route path=":id" element={<RecipeDetails />} />
             </Route>
 

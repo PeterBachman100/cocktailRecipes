@@ -8,13 +8,15 @@ import { RotateCcw } from 'lucide-react';
 function RecipeList({ filters, resetFilters, refreshTrigger, isPrivate }) {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isWakingUp, setIsWakingUp] = useState(false);
 
-  // Debounce the search term to prevent API spamming while typing
   const debouncedSearch = useDebounce(filters.search, 500);
 
   useEffect(() => {
+    let wakeUpTimer;
     const fetchRecipes = async () => {
       setLoading(true);
+      wakeUpTimer = setTimeout(() => setIsWakingUp(true), 3000);
       try {
         const endpoint = isPrivate ? '/api/private-recipes' : '/api/public-recipes';
 
@@ -33,14 +35,19 @@ function RecipeList({ filters, resetFilters, refreshTrigger, isPrivate }) {
 
         const response = await api.get(endpoint, { params });
         setRecipes(response.data); 
+        clearTimeout(wakeUpTimer);
+        setIsWakingUp(false);
       } catch (error) {
         console.error("Failed to fetch recipes:", error);
+        clearTimeout(wakeUpTimer);
+        setIsWakingUp(false);
       } finally {
         setLoading(false);
       }
     };
 
     fetchRecipes();
+    return () => clearTimeout(wakeUpTimer);
   }, [
     debouncedSearch, 
     filters.spirits.join(','), 
@@ -68,6 +75,19 @@ function RecipeList({ filters, resetFilters, refreshTrigger, isPrivate }) {
         <div className='RecipeList_loading'>
           <MoonLoader color='var(--color-accent)' size={60} speedMultiplier={0.5}/>
           <p>Finding the perfect drink...</p>
+        </div>
+    </div>
+  );
+  if (loading) return (
+    <div className='RecipeList_loadingWrapper'>
+        <div className='RecipeList_loading'>
+          <MoonLoader color='var(--color-accent)' size={60} speedMultiplier={0.5}/>
+          <p>Finding the perfect drink...</p>
+          {isWakingUp && (
+            <p className="waking-up_note">
+              Waking up the server...<br /> Since this is a hobby project, the backend takes about 30 seconds to start back up. We’ll be right with you!
+            </p>
+          )}
         </div>
     </div>
   );

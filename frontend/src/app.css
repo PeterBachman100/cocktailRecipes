@@ -1843,3 +1843,12 @@ input[type=number] {
 .Link:hover {
   color: var(--color-accent);
 }
+
+
+
+
+.waking-up_note {
+  font-size: var(--text-md);
+  margin-block: var(--space-sm);
+  color: var(--color-text-muted);
+}
