@@ -551,6 +551,7 @@ input[type=number] {
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-md);
   background-color: var(--color-surface);
+  transition: all 0.2s ease;
 }
 
 .RecipeCard_main {
@@ -594,6 +595,9 @@ input[type=number] {
   overflow: hidden;
 }
 
+.RecipeCard:hover .RecipeCard_root {
+  box-shadow: 0 0 0 2px var(--color-secondary);
+}
 .RecipeCard.active .RecipeCard_root {
   box-shadow: 0 0 0 4px var(--color-accent);
 }
