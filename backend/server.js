@@ -20,9 +20,10 @@ app.set('trust proxy', 1);
 app.use(express.json()); 
 
 const allowedOrigins = [
-  'http://localhost:5173',
-  'https://tippl.vercel.app/'
-];
+'http://localhost:5173',
+process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
