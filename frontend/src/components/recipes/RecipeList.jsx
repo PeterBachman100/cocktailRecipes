@@ -75,14 +75,6 @@ function RecipeList({ filters, resetFilters, refreshTrigger, isPrivate }) {
         <div className='RecipeList_loading'>
           <MoonLoader color='var(--color-accent)' size={60} speedMultiplier={0.5}/>
           <p>Finding the perfect drink...</p>
-        </div>
-    </div>
-  );
-  if (loading) return (
-    <div className='RecipeList_loadingWrapper'>
-        <div className='RecipeList_loading'>
-          <MoonLoader color='var(--color-accent)' size={60} speedMultiplier={0.5}/>
-          <p>Finding the perfect drink...</p>
           {isWakingUp && (
             <p className="waking-up_note">
               Waking up the server...<br /> Since this is a hobby project, the backend takes about 30 seconds to start back up. We’ll be right with you!
