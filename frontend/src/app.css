@@ -1849,6 +1849,8 @@ input[type=number] {
 
 .waking-up_note {
   font-size: var(--text-md);
-  margin-block: var(--space-sm);
+  margin-block: var(--space-md);
   color: var(--color-text-muted);
+  text-align: center;
+  width: 50ch;
 }

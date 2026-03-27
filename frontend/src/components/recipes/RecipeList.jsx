@@ -77,7 +77,7 @@ function RecipeList({ filters, resetFilters, refreshTrigger, isPrivate }) {
           <p>Finding the perfect drink...</p>
           {isWakingUp && (
             <p className="waking-up_note">
-              Waking up the server...<br /> Since this is a hobby project, the backend takes about 30 seconds to start back up. We’ll be right with you!
+              Waking up the server. Since this is a hobby project, the backend takes about 30 seconds to start back up. We’ll be right with you!
             </p>
           )}
         </div>
